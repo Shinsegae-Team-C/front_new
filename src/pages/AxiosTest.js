@@ -7,16 +7,18 @@ axios.defaults.headers['Access-Control-Allow-Origin'] = '*';
 const AxiosTest = () => {
   const { queryId } = useParams();
   const [data, setData] = useState();
+  const [say, setSay] = useState([]);
   const msg = new SpeechSynthesisUtterance();
   const shoppingData = async () => {
-    const URL = "/main"; //URL이 이상하다고 생각하실겁니다! 아래에 계속 됩니다!
+    // const URL = "/api/main"; //URL이 이상하다고 생각하실겁니다! 아래에 계속 됩니다!
     // const ClientID = "GVxnV9NWdUB0hK0p7LRt";
     // const ClientSecret = "UCFXtO1UJN";
     try {
       const res = await axios
-        .post(URL, {
+        .post(`/main?productName=${queryId}`,{}, {
           // params: {
-          productName: queryId,
+          productName: queryId
+          // queryId,
           // display: 5,
           // },
 
@@ -24,10 +26,13 @@ const AxiosTest = () => {
           //   "X-Naver-Client-Id": ClientID,
           //   "X-Naver-Client-Secret": ClientSecret,
           // },
-        },
+        }, 
           { withCredentials: true },
         )
       setData(res.data);
+      // setTimeout(()=>{speechHandlers(res.data);},5000);
+      
+      // speechHandlers(data.productName)
     } catch (e) {
       console.log(e);
     }
@@ -37,19 +42,32 @@ const AxiosTest = () => {
   useEffect(() => {
     shoppingData();
   }, []);
+  // useEffect(()=>{
+  //   console.log(data[0]);
+  // },[data]);
 
   const speechHandlers = (list) => {
-    msg.text = list
+    list.map((item) => (setSay([...say, item.productName])));
+    msg.text = say
     window.speechSynthesis.speak(msg)
+    console.log(say)
   }
 
   return (<div>
     <h2>상품리스트</h2>
-    {data && data.items.map((item, idx) => {
-      const oldTextArticle = item.title;
-      const newTextArticle = oldTextArticle.replace(/(<([^>]+)>)/ig, "").replace(/&quot;/g, "").replace(/\"n/, "").replace(/&amp;/g, "");
-      return <p><button onClick={() => speechHandlers(idx + 1 + '번째 상품' + newTextArticle)}>SPEAK</button>{idx + 1}<a href={item.link}>{newTextArticle}</a></p>;
-    })}
+    <div>
+    {data && 
+    data.map((item) => (
+      <ul key={item.productId}>
+        <li>{item.productImg}</li>
+        <li><a href={`/product/${item.productId}`}>{item.productName}</a></li>
+        <li>{item.price}</li>
+        <li>{item.productId}</li>
+        {/* <button onClick={speechHandlers(item.productName)}>speech</button> */}
+      </ul>
+    ))
+    }</div>
+    
   </div>);
 }
 

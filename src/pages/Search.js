@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSpeechRecognition } from "react-speech-kit";
-import navigateSearch from "./sounds/navigate.mp3";
+import navigateSearch from "../sounds/navigate.mp3";
 import { useNavigate } from "react-router-dom";
 
 
@@ -60,7 +60,7 @@ const Search = () => {
         stop();
         const order = value.replace('주문','')
         setTimeout(function() {
-          navigate(`/axiostest/${order}`);
+          navigate(`/products/${order}`);
         }, 2000);
       }
     }, [value]);  

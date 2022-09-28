@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import "./App.css";
+import "../App.css";
 
 function Cart() {
   const [totalPrice, setTotalPrices] = useState(0);
