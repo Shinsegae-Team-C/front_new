@@ -12,6 +12,7 @@ import {
   Button,
   CloseButton,
 } from "react-bootstrap";
+import axios from "axios";
 
 function Cart() {
   const location = useLocation();
@@ -26,13 +27,34 @@ function Cart() {
       const phoneNumber = userInfo.phoneNumber;
     }
   });
+  const getCartListData = async () => {
+    try {
+      console.log(userInfo.userId);
+      const result = await axios
+        .post("/cart/selectCartList", {
+          userId: userInfo.userId,
+        })
+        .then((res) => {
+          console.log(res);
+          setItems(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  useEffect(() => {
+    getCartListData();
+  }, []);
 
   let navigate = useNavigate();
   const [totalPrice, setTotalPrices] = useState(0);
   const [item, setItems] = useState([
-    { cart_id: 1, name: "a", price: 2000, product_cnt: 1, check: "false" },
-    { cart_id: 2, name: "b", price: 3000, product_cnt: 2, check: "false" },
-    { cart_id: 3, name: "c", price: 4000, product_cnt: 3, check: "false" },
+    // { cart_id: 1, name: "a", price: 2000, product_cnt: 1, check: "false" },
+    // { cart_id: 2, name: "b", price: 3000, product_cnt: 2, check: "false" },
+    // { cart_id: 3, name: "c", price: 4000, product_cnt: 3, check: "false" },
   ]);
 
   function toPayments() {
@@ -40,41 +62,41 @@ function Cart() {
   }
   //x버튼 누르면 해당 상품 삭제
   const deleteItem = (id) => {
-    const newItems = item.filter((itm) => itm.cart_id !== id);
-    const delItem = item.filter((itm) => itm.cart_id === id)[0];
+    const newItems = item.filter((itm) => itm.PRODUCT_ID !== id);
+    const delItem = item.filter((itm) => itm.PRODUCT_ID === id)[0];
     console.log(item);
     if (delItem.check === "true") {
-      setTotalPrices(totalPrice - delItem.price * delItem.product_cnt);
+      setTotalPrices(totalPrice - delItem.PRICE * delItem.PRODUCT_CNT);
     }
     setItems(newItems);
   };
 
   //선택한 상품의 가격들만 합치기 -> 총 가격
   const checkHandler = (checked, id) => {
-    const product = item.filter((itm) => itm.cart_id === id)[0];
+    const product = item.filter((itm) => itm.PRODUCT_ID === id)[0];
     if (checked) {
-      setTotalPrices(totalPrice + product.price * product.product_cnt);
+      setTotalPrices(totalPrice + product.PRICE * product.PRODUCT_CNT);
       const change = item.map((itm) => {
         return {
           ...item,
-          cart_id: itm.cart_id,
-          name: itm.name,
-          price: itm.price,
-          product_cnt: itm.product_cnt,
-          check: "true",
+          PRODUCT_ID: itm.PRODUCT_ID,
+          PRODUCT_NAME: itm.PRODUCT_NAME,
+          PRICE: itm.PRICE,
+          PRODUCT_CNT: itm.PRODUCT_CNT,
+          CHK_YN: "true",
         };
       });
       setItems(change);
     } else {
-      setTotalPrices(totalPrice - product.price * product.product_cnt);
+      setTotalPrices(totalPrice - product.PRICE * product.PRODUCT_CNT);
       const change = item.map((itm) => {
         return {
           ...item,
-          cart_id: itm.cart_id,
-          name: itm.name,
-          price: itm.price,
-          product_cnt: itm.product_cnt,
-          check: "false",
+          PRODUCT_ID: itm.PRODUCT_ID,
+          PRODUCT_NAME: itm.PRODUCT_NAME,
+          PRICE: itm.PRICE,
+          PRODUCT_CNT: itm.PRODUCT_CNT,
+          CHK_YN: "false",
         };
       });
       setItems(change);
@@ -85,31 +107,31 @@ function Cart() {
   //수량 방향키로 조절하는 거  37:왼쪽, 39:오른쪽 방향키
   const keyPress = (event, target) => {
     const subtractQty = item.map((itm) => {
-      if (itm.cart_id === target.cart_id) {
-        if (event.keyCode === 37 && itm.product_cnt >= 1) {
-          if (itm.check === "true") {
-            setTotalPrices(totalPrice - itm.price);
+      if (itm.PRODUCT_ID === target.PRODUCT_ID) {
+        if (event.keyCode === 37 && itm.PRODUCT_CNT >= 1) {
+          if (itm.CHK_YN === "true") {
+            setTotalPrices(totalPrice - itm.PRICE);
           }
           return {
             ...item,
-            cart_id: itm.cart_id,
-            name: itm.name,
-            price: itm.price,
-            product_cnt: itm.product_cnt - 1,
-            check: itm.check,
+            PRODUCT_ID: itm.PRODUCT_ID,
+            PRODUCT_NAME: itm.PRODUCT_NAME,
+            PRICE: itm.PRICE,
+            PRODUCT_CNT: itm.PRODUCT_CNT - 1,
+            CHK_YN: itm.CHK_YN,
           };
         }
         if (event.keyCode === 39) {
-          if (itm.check === "true") {
-            setTotalPrices(totalPrice + itm.price);
+          if (itm.CHK_YN === "true") {
+            setTotalPrices(totalPrice + itm.PRICE);
           }
           return {
             ...item,
-            cart_id: itm.cart_id,
-            name: itm.name,
-            price: itm.price,
-            product_cnt: itm.product_cnt + 1,
-            check: itm.check,
+            PRODUCT_ID: itm.PRODUCT_ID,
+            PRODUCT_NAME: itm.PRODUCT_NAME,
+            PRICE: itm.PRICE,
+            PRODUCT_CNT: itm.PRODUCT_CNT + 1,
+            CHK_YN: itm.CHK_YN,
           };
         }
       } else return itm;
@@ -167,7 +189,7 @@ function Cart() {
           </thead>
           <tbody>
             {item.map((itm) => (
-              <tr>
+              <tr key="{itm}">
                 <td width="120px">
                   <style type="text/css">
                     {`
@@ -199,7 +221,7 @@ function Cart() {
         `}
                   </style>
                   <Button variant="flat" onKeyDown={(e) => keyPress(e, itm)}>
-                    {itm.cart_id}
+                    {itm.PRODUCT_ID}
                   </Button>
                   {/* <button onKeyDown={(e) => keyPress(e, itm)}>
                     {itm.cart_id}
@@ -210,16 +232,16 @@ function Cart() {
                     class="form-check-input"
                     type="checkbox"
                     onChange={(e) => {
-                      checkHandler(e.currentTarget.checked, itm.cart_id);
+                      checkHandler(e.currentTarget.checked, itm.PRODUCT_ID);
                     }}
                   ></input>
                 </td>
-                <td>{itm.name}</td>
-                <td>{itm.price}원</td>
-                <td>{itm.product_cnt}</td>
+                <td>{itm.PRODUCT_NAME}</td>
+                <td>{itm.PRICE}원</td>
+                <td>{itm.PRODUCT_CNT}</td>
                 <td>
                   <CloseButton
-                    onClick={() => deleteItem(itm.cart_id)}
+                    onClick={() => deleteItem(itm.PRODUCT_ID)}
                   ></CloseButton>
                   {/* <button onClick={() => deleteItem(itm.cart_id)}>X</button> */}
                 </td>

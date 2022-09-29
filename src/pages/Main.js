@@ -55,6 +55,42 @@ const Main = (props) => {
             //     <i class="bi bi-cart2"></i> 장바구니
             //   </Nav.Link>
             // </Nav>
+            // <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            // <Nav className="me-auto">
+            //   <Nav.Link
+            //     href="/search"
+            //     state={{
+            //       userId: userInfo.userId,
+            //       userName: userInfo.userName,
+            //       address: userInfo.address,
+            //       phoneNumber: userInfo.phoneNumber,
+            //     }}
+            //   >
+            //     <i class="bi bi-search"></i> 상품검색
+            //   </Nav.Link>
+            //   <Nav.Link
+            //     href="/products"
+            //     state={{
+            //       userId: userInfo.userId,
+            //       userName: userInfo.userName,
+            //       address: userInfo.address,
+            //       phoneNumber: userInfo.phoneNumber,
+            //     }}
+            //   >
+            //     <i class="bi bi-shop"></i> 상품목록
+            //   </Nav.Link>
+            //   <Nav.Link
+            //     href="/cart"
+            //     state={{
+            //       userId: userInfo.userId,
+            //       userName: userInfo.userName,
+            //       address: userInfo.address,
+            //       phoneNumber: userInfo.phoneNumber,
+            //     }}
+            //   >
+            //     <i class="bi bi-cart2"></i> 장바구니
+            //   </Nav.Link>
+            // </Nav>
             <ul>
               <Link
                 to="/cart"
