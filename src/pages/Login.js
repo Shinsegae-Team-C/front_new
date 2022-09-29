@@ -4,7 +4,15 @@ import { useState } from "react";
 import Axios from "axios";
 import "../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Container, Navbar, Nav, Row, Col, Button } from "react-bootstrap";
+import {
+  Container,
+  Navbar,
+  Nav,
+  Row,
+  Col,
+  Button,
+  Form,
+} from "react-bootstrap";
 
 function Login() {
   const [userId, setId] = useState("");
@@ -77,7 +85,6 @@ function Login() {
       <div class="text-center">
       <button onClick={toJoin}>회원가입하기</button>
       </div> */}
-      <form onSubmit={login}></form>
       <Container>
         <h1 className="Auth-form-title" class="text-center">
           <br />
@@ -85,7 +92,7 @@ function Login() {
           <br />
           <br />
         </h1>
-        <Row>
+        {/* <Row>
           <Col></Col>
           <Col>
             {" "}
@@ -116,7 +123,7 @@ function Login() {
             />
           </Col>
           <Col></Col>
-        </Row>
+        </Row> */}
         <Row>
           <Col></Col>
           <Col xs={3}>
@@ -134,12 +141,44 @@ function Login() {
           }
         `}
             </style>
-            <br />
-            <form onSubmit={login}>
+            {/* <form onSubmit={login}>
               <input type="submit" value="로그인">
                 {" "}
               </input>
-            </form>{" "}
+            </form>{" "} */}
+          </Col>
+          <Col></Col>
+        </Row>
+      </Container>
+      <Form onSubmit={login}>
+        <Row>
+          <Col></Col>
+          <Col>
+            <label>아이디</label>
+            <input
+              type="text"
+              className="form-control mt-1"
+              onChange={(event) => {
+                setId(event.target.value);
+              }}
+            ></input>
+            <br />
+          </Col>
+          <Col></Col>
+        </Row>
+        <Row>
+          <Col></Col>
+          <Col>
+            <label>비밀번호</label>
+            <input
+              type="password"
+              className="form-control mt-1"
+              placeholder="비밀번호를 입력해주세요."
+              onChange={(event) => {
+                setPw(event.target.value);
+              }}
+            ></input>
+            <br />
           </Col>
           <Col></Col>
         </Row>
@@ -152,10 +191,39 @@ function Login() {
                 회원가입하기
               </span>
             </div>
+            <br />
           </Col>
           <Col></Col>
         </Row>
-      </Container>
+        <Row>
+          <Col></Col>
+          <Col>
+            <input
+              type="submit"
+              value="로그인하기"
+              class="form-control"
+            ></input>
+          </Col>
+          <Col></Col>
+        </Row>
+        {/* ID :
+        <input
+          type="text"
+          className="form-control mt-1"
+          onChange={(event) => {
+            setId(event.target.value);
+          }}
+        ></input> */}
+        {/* <br />
+        PWD :{" "}
+        <input
+          type="password"
+          onChange={(event) => {
+            setPw(event.target.value);
+          }}
+        ></input> */}
+        <br />
+      </Form>
       {/* <h1>Login</h1>
       <form onSubmit={login}>
         ID :
@@ -176,7 +244,7 @@ function Login() {
         <br />
         <input type="submit" value="로그인"></input>
       </form> */}
-      <button onClick={toJoin}>회원가입하기</button>
+      {/* <button onClick={toJoin}>회원가입하기</button> */}
     </div>
   );
 }
