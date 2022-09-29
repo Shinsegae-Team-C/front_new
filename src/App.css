@@ -36,3 +36,29 @@
     transform: rotate(360deg);
   }
 }
+
+.soso-navbar{
+  background-color:rgb(248, 176, 69);
+}
+
+input[type=checkbox] {
+
+  zoom: 1.5;
+  
+  
+  }
+
+  input:checked[type=checkbox] {
+
+    zoom: 1.5;
+    background-color: rgb(248, 176, 69);
+    border-color:rgb(248, 176, 69);
+    
+    }
+.soso-button{
+  color :rgb(248, 176, 69);
+  text-decoration: underline;
+  --bs-btn-hover-color:#fff;
+  --bs-btn-hover-bg: rgb(248, 176, 69);
+  --bs-btn-hover-border-color:#0a58ca;
+}
