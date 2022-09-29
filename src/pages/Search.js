@@ -75,7 +75,7 @@ const Search = () => {
       }, 2000);
     } else if (value.includes("주문")) {
       stop();
-      const order = value.replace("주문", "");
+      const order = value.replace("주문", "").trim();
       setTimeout(function () {
         navigate(`/products/${order}`, {
           state: {
@@ -91,8 +91,8 @@ const Search = () => {
   return (
     // <>
     //   <h1>SoundTestPage</h1>
-    //   <div className="answer">{value}</div>
-    //   {listening && <div>인식 중</div>}
+    // <div className="answer">{value}</div>
+    // {listening && <div>인식 중</div>}
     // </>
     <div>
       <link
@@ -137,8 +137,11 @@ const Search = () => {
               type="text"
               className="form-control mt-1"
               placeholder="아래 마이크를 눌러주세요 :)"
+              value={value}
             />
           </Col>
+          {/* <div className="answer">{value}</div>
+      {listening && <div>인식 중</div>} */}
           <Col></Col>
         </Row>
       </Container>

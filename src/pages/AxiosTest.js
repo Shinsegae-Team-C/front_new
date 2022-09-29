@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 axios.defaults.withCredentials = true;
-axios.defaults.headers['Access-Control-Allow-Origin'] = '*';
+axios.defaults.headers["Access-Control-Allow-Origin"] = "*";
 
 const AxiosTest = () => {
   const { queryId } = useParams();
@@ -14,29 +14,22 @@ const AxiosTest = () => {
     // const ClientID = "GVxnV9NWdUB0hK0p7LRt";
     // const ClientSecret = "UCFXtO1UJN";
     try {
-      const res = await axios
-        .post(`/main?productName=${queryId}`,{}, {
+      const res = await axios.post(
+        `/main?productName=${queryId}`,
+        {},
+        {
           // params: {
-          productName: queryId
-          // queryId,
-          // display: 5,
-          // },
-
-          // headers: {
-          //   "X-Naver-Client-Id": ClientID,
-          //   "X-Naver-Client-Secret": ClientSecret,
-          // },
-        }, 
-          { withCredentials: true },
-        )
+          productName: queryId,
+        },
+        { withCredentials: true }
+      );
       setData(res.data);
       // setTimeout(()=>{speechHandlers(res.data);},5000);
-      
+
       // speechHandlers(data.productName)
     } catch (e) {
       console.log(e);
     }
-
   };
 
   useEffect(() => {
@@ -47,28 +40,31 @@ const AxiosTest = () => {
   // },[data]);
 
   const speechHandlers = (list) => {
-    list.map((item) => (setSay([...say, item.productName])));
-    msg.text = say
-    window.speechSynthesis.speak(msg)
-    console.log(say)
-  }
+    list.map((item) => setSay([...say, item.productName]));
+    msg.text = say;
+    window.speechSynthesis.speak(msg);
+    console.log(say);
+  };
 
-  return (<div>
-    <h2>상품리스트</h2>
+  return (
     <div>
-    {data && 
-    data.map((item) => (
-      <ul key={item.productId}>
-        <li>{item.productImg}</li>
-        <li><a href={`/product/${item.productId}`}>{item.productName}</a></li>
-        <li>{item.price}</li>
-        <li>{item.productId}</li>
-        {/* <button onClick={speechHandlers(item.productName)}>speech</button> */}
-      </ul>
-    ))
-    }</div>
-    
-  </div>);
-}
+      <h2>상품리스트</h2>
+      <div>
+        {data &&
+          data.map((item) => (
+            <ul key={item.productId}>
+              <li>{item.productImg}</li>
+              <li>
+                <a href={`/product/${item.productId}`}>{item.productName}</a>
+              </li>
+              <li>{item.price}</li>
+              <li>{item.productId}</li>
+              {/* <button onClick={speechHandlers(item.productName)}>speech</button> */}
+            </ul>
+          ))}
+      </div>
+    </div>
+  );
+};
 
 export default AxiosTest;

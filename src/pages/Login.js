@@ -77,7 +77,8 @@ function Login() {
       <div class="text-center">
       <button onClick={toJoin}>회원가입하기</button>
       </div> */}
-      {/* <Container>
+      <form onSubmit={login}></form>
+      <Container>
         <h1 className="Auth-form-title" class="text-center">
           <br />
           로그인
@@ -154,8 +155,8 @@ function Login() {
           </Col>
           <Col></Col>
         </Row>
-      </Container> */}
-      <h1>Login</h1>
+      </Container>
+      {/* <h1>Login</h1>
       <form onSubmit={login}>
         ID :
         <input
@@ -174,7 +175,7 @@ function Login() {
         ></input>
         <br />
         <input type="submit" value="로그인"></input>
-      </form>
+      </form> */}
       <button onClick={toJoin}>회원가입하기</button>
     </div>
   );
