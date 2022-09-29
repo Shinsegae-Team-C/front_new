@@ -4,8 +4,21 @@ import navigateSearch from "../sounds/navigate.mp3";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Navbar, Nav, Row, Col } from "react-bootstrap";
+import { useLocation } from "react-router";
 
 const Search = () => {
+  const location = useLocation();
+
+  const userInfo = location.state;
+
+  useEffect(() => {
+    if (userInfo != null) {
+      const userId = userInfo.userId;
+      const userName = userInfo.userName;
+      const address = userInfo.address;
+      const phoneNumber = userInfo.phoneNumber;
+    }
+  });
   //안내 음성을 출력하기 위한 오디오 함수
   const useAudio = (url) => {
     const [audio] = useState(new Audio(url));
@@ -49,7 +62,9 @@ const Search = () => {
       listen({ interimResults: false });
     }
   }, [playing]);
+
   const navigate = useNavigate();
+
   useEffect(() => {
     if (value.includes("처음")) {
       console.log(value.length);
@@ -62,7 +77,14 @@ const Search = () => {
       stop();
       const order = value.replace("주문", "");
       setTimeout(function () {
-        navigate(`/products/${order}`);
+        navigate(`/products/${order}`, {
+          state: {
+            userId: userInfo.userId,
+            userName: userInfo.userNamer,
+            address: userInfo.address,
+            phoneNumber: userInfo.phoneNumber,
+          },
+        });
       }, 2000);
     }
   }, [value]);

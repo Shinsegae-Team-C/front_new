@@ -1,13 +1,30 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useLocation } from "react-router";
 import { Container, Navbar, Nav } from "react-bootstrap";
 import "../App.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Main = (props) => {
   const [isAuth, setIsAuth] = useState(false);
   console.log(isAuth);
+  const location = useLocation();
+
+  const userInfo = location.state;
+
+  useEffect(() => {
+    if (userInfo != null) {
+      const userId = userInfo.userId;
+      const userName = userInfo.userName;
+      const address = userInfo.address;
+      const phoneNumber = userInfo.phoneNumber;
+
+      setIsAuth(userId);
+    }
+  });
+
+  console.log("isAuth : " + Boolean(isAuth));
   return (
     <>
       <link
@@ -27,17 +44,55 @@ const Main = (props) => {
             소소배송
           </Navbar.Brand>
           {isAuth && (
-            <Nav className="me-auto">
-              <Nav.Link href="/search">
-                <i class="bi bi-search"></i> 상품검색
-              </Nav.Link>
-              <Nav.Link href="/products">
-                <i class="bi bi-shop"></i> 상품목록
-              </Nav.Link>
-              <Nav.Link href="/cart">
-                <i class="bi bi-cart2"></i> 장바구니
-              </Nav.Link>
-            </Nav>
+            // <Nav className="me-auto">
+            //   <Nav.Link href="/search">
+            //     <i class="bi bi-search"></i> 상품검색
+            //   </Nav.Link>
+            //   <Nav.Link href="/products">
+            //     <i class="bi bi-shop"></i> 상품목록
+            //   </Nav.Link>
+            //   <Nav.Link href="/cart">
+            //     <i class="bi bi-cart2"></i> 장바구니
+            //   </Nav.Link>
+            // </Nav>
+            <ul>
+              <Link
+                to="/cart"
+                state={{
+                  userId: userInfo.userId,
+                  userName: userInfo.userName,
+                  address: userInfo.address,
+                  phoneNumber: userInfo.phoneNumber,
+                }}
+              >
+                {" "}
+                <li>장바구니</li>
+              </Link>
+              <Link
+                to="/search"
+                state={{
+                  userId: userInfo.userId,
+                  userName: userInfo.userName,
+                  address: userInfo.address,
+                  phoneNumber: userInfo.phoneNumber,
+                }}
+              >
+                {" "}
+                <li>검색창</li>
+              </Link>
+              <Link
+                to="/products"
+                state={{
+                  userId: userInfo.userId,
+                  userName: userInfo.userName,
+                  address: userInfo.address,
+                  phoneNumber: userInfo.phoneNumber,
+                }}
+              >
+                {" "}
+                <li>상품리스트</li>
+              </Link>
+            </ul>
           )}
           {!isAuth && (
             <Nav>

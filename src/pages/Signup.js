@@ -3,6 +3,7 @@ import { useState } from "react";
 import Axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Navbar, Nav, Row, Col, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 function Signup() {
   const [userId, setId] = useState("");
@@ -12,6 +13,8 @@ function Signup() {
   const [phoneNumber, setPhoneNumber] = useState("");
 
   const [userList, setUserList] = useState([]);
+
+  let navigate = useNavigate();
 
   const addUser = () => {
     Axios.post("/user/signUp", {
@@ -24,6 +27,10 @@ function Signup() {
       console.log("success");
     });
   };
+
+  function toLogin() {
+    navigate("/login");
+  }
 
   const getUser = () => {
     Axios.post("/user").then((response) => {
@@ -165,7 +172,13 @@ function Signup() {
           }
         `}
             </style>
-            <Button variant="flat" onClick={addUser}>
+            <Button
+              variant="flat"
+              onClick={() => {
+                addUser();
+                toLogin();
+              }}
+            >
               <i class="bi bi-person-plus-fill"></i> 회원가입하기
             </Button>
           </Col>

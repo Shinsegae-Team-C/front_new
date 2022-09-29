@@ -1,6 +1,7 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router";
 import "../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {
@@ -13,6 +14,19 @@ import {
 } from "react-bootstrap";
 
 function Cart() {
+  const location = useLocation();
+
+  const userInfo = location.state;
+
+  useEffect(() => {
+    if (userInfo != null) {
+      const userId = userInfo.userId;
+      const userName = userInfo.userName;
+      const address = userInfo.address;
+      const phoneNumber = userInfo.phoneNumber;
+    }
+  });
+
   let navigate = useNavigate();
   const [totalPrice, setTotalPrices] = useState(0);
   const [item, setItems] = useState([

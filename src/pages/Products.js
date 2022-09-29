@@ -5,10 +5,23 @@ import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Navbar, Nav, Button, Row, Col } from "react-bootstrap";
 import axios from "axios";
+import { useLocation } from "react-router";
 axios.defaults.withCredentials = true;
 axios.defaults.headers["Access-Control-Allow-Origin"] = "*";
 
 const Products = () => {
+  const location = useLocation();
+
+  const userInfo = location.state;
+
+  useEffect(() => {
+    if (userInfo != null) {
+      const userId = userInfo.userId;
+      const userName = userInfo.userName;
+      const address = userInfo.address;
+      const phoneNumber = userInfo.phoneNumber;
+    }
+  });
   const { queryId } = useParams(); // const 변수명 = useParams().파라미터명
   const [data, setData] = useState();
   const [say, setSay] = useState([]);
@@ -20,15 +33,17 @@ const Products = () => {
     // const ClientID = "GVxnV9NWdUB0hK0p7LRt";
     // const ClientSecret = "UCFXtO1UJN";
     try {
-      const res = await axios.post(
-        `/main?productName=${queryId}`,
-        {},
-        {
+      const result = await axios
+        .post("/main", {
           productName: queryId,
-        },
-        { withCredentials: true }
-      );
-      setData(res.data);
+        })
+        .then((res) => {
+          console.log(res);
+          setData(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     } catch (e) {
       console.log(e);
     }

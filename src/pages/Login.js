@@ -13,13 +13,26 @@ function Login() {
   function toJoin() {
     navigate("/signup");
   }
-  const login = () => {
+  const login = (e) => {
+    e.preventDefault();
     Axios.post("/user/login", {
       userId: userId,
       userPw: userPw,
-    }).then((res) => {
-      console.log(res);
-    });
+    })
+      .then((res) => {
+        var userData = res.data.info;
+        navigate("/", {
+          state: {
+            userId: userData.userId,
+            userName: userData.userNamer,
+            address: userData.address,
+            phoneNumber: userData.phoneNumber,
+          },
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
   return (
     <div>
@@ -64,7 +77,7 @@ function Login() {
       <div class="text-center">
       <button onClick={toJoin}>회원가입하기</button>
       </div> */}
-      <Container>
+      {/* <Container>
         <h1 className="Auth-form-title" class="text-center">
           <br />
           로그인
@@ -121,9 +134,11 @@ function Login() {
         `}
             </style>
             <br />
-            <Button variant="flat" onClick={login}>
-              <i class="bi bi-box-arrow-in-right"></i> 로그인하기
-            </Button>
+            <form onSubmit={login}>
+              <input type="submit" value="로그인">
+                {" "}
+              </input>
+            </form>{" "}
           </Col>
           <Col></Col>
         </Row>
@@ -139,9 +154,38 @@ function Login() {
           </Col>
           <Col></Col>
         </Row>
-      </Container>
+      </Container> */}
+      <h1>Login</h1>
+      <form onSubmit={login}>
+        ID :
+        <input
+          type="text"
+          onChange={(event) => {
+            setId(event.target.value);
+          }}
+        ></input>
+        <br />
+        PWD :{" "}
+        <input
+          type="password"
+          onChange={(event) => {
+            setPw(event.target.value);
+          }}
+        ></input>
+        <br />
+        <input type="submit" value="로그인"></input>
+      </form>
+      <button onClick={toJoin}>회원가입하기</button>
     </div>
   );
+}
+{
+  /* <i class="bi bi-box-arrow-in-right"></i> 로그인하기 */
+}
+{
+  /* <Button variant="flat" onClick={login}>
+              <i class="bi bi-box-arrow-in-right"></i> 로그인하기
+            </Button> */
 }
 
 export default Login;
