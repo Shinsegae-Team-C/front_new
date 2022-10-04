@@ -44,67 +44,12 @@ const Main = (props) => {
             소소배송
           </Navbar.Brand>
           {isAuth && (
-            // <Nav className="me-auto">
-            //   <Nav.Link href="/search">
-            //     <i class="bi bi-search"></i> 상품검색
-            //   </Nav.Link>
-            //   <Nav.Link href="/products">
-            //     <i class="bi bi-shop"></i> 상품목록
-            //   </Nav.Link>
-            //   <Nav.Link href="/cart">
-            //     <i class="bi bi-cart2"></i> 장바구니
-            //   </Nav.Link>
-            // </Nav>
-            // <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            // <Nav className="me-auto">
-            //   <Nav.Link
-            //     href="/search"
-            //     state={{
-            //       userId: userInfo.userId,
-            //       userName: userInfo.userName,
-            //       address: userInfo.address,
-            //       phoneNumber: userInfo.phoneNumber,
-            //     }}
-            //   >
-            //     <i class="bi bi-search"></i> 상품검색
-            //   </Nav.Link>
-            //   <Nav.Link
-            //     href="/products"
-            //     state={{
-            //       userId: userInfo.userId,
-            //       userName: userInfo.userName,
-            //       address: userInfo.address,
-            //       phoneNumber: userInfo.phoneNumber,
-            //     }}
-            //   >
-            //     <i class="bi bi-shop"></i> 상품목록
-            //   </Nav.Link>
-            //   <Nav.Link
-            //     href="/cart"
-            //     state={{
-            //       userId: userInfo.userId,
-            //       userName: userInfo.userName,
-            //       address: userInfo.address,
-            //       phoneNumber: userInfo.phoneNumber,
-            //     }}
-            //   >
-            //     <i class="bi bi-cart2"></i> 장바구니
-            //   </Nav.Link>
-            // </Nav>
-            <ul>
-              <Link
-                to="/cart"
-                state={{
-                  userId: userInfo.userId,
-                  userName: userInfo.userName,
-                  address: userInfo.address,
-                  phoneNumber: userInfo.phoneNumber,
-                }}
-              >
-                {" "}
-                <li>장바구니</li>
-              </Link>
-              <Link
+            <Nav>
+              <Nav.Link>
+                <i class="bi bi-volume-up"></i> 음성듣기
+              </Nav.Link>
+              <Nav.Link
+                as={Link}
                 to="/search"
                 state={{
                   userId: userInfo.userId,
@@ -113,10 +58,10 @@ const Main = (props) => {
                   phoneNumber: userInfo.phoneNumber,
                 }}
               >
-                {" "}
-                <li>검색창</li>
-              </Link>
-              <Link
+                <i class="bi bi-search"></i> 상품검색
+              </Nav.Link>
+              <Nav.Link
+                as={Link}
                 to="/products"
                 state={{
                   userId: userInfo.userId,
@@ -125,10 +70,60 @@ const Main = (props) => {
                   phoneNumber: userInfo.phoneNumber,
                 }}
               >
-                {" "}
-                <li>상품리스트</li>
-              </Link>
-            </ul>
+                <i class="bi bi-shop"></i> 상품목록
+              </Nav.Link>
+              <Nav.Link
+                as={Link}
+                to="/cart"
+                state={{
+                  userId: userInfo.userId,
+                  userName: userInfo.userName,
+                  address: userInfo.address,
+                  phoneNumber: userInfo.phoneNumber,
+                }}
+              >
+                <i class="bi bi-cart2"></i> 장바구니
+              </Nav.Link>
+            </Nav>
+            // <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            // <ul>
+            //   <Link
+            // to="/cart"
+            // state={{
+            //   userId: userInfo.userId,
+            //   userName: userInfo.userName,
+            //   address: userInfo.address,
+            //   phoneNumber: userInfo.phoneNumber,
+            // }}
+            //   >
+            //     {" "}
+            //     <li>장바구니</li>
+            //   </Link>
+            //   <NavLink
+            //     to="/search"
+            // state={{
+            //   userId: userInfo.userId,
+            //   userName: userInfo.userName,
+            //   address: userInfo.address,
+            //   phoneNumber: userInfo.phoneNumber,
+            // }}
+            //   >
+            //     {" "}
+            //     <li>검색창</li>
+            //   </NavLink>
+            //   <Link
+            // to="/products"
+            // state={{
+            //   userId: userInfo.userId,
+            //   userName: userInfo.userName,
+            //   address: userInfo.address,
+            //   phoneNumber: userInfo.phoneNumber,
+            // }}
+            //   >
+            //     {" "}
+            //     <li>상품리스트</li>
+            //   </Link>
+            // </ul>
           )}
           {!isAuth && (
             <Nav>

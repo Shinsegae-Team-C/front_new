@@ -73,7 +73,7 @@ function Order() {
         <h1 class="display-2">
           <i class="bi bi-cart-check"></i>
         </h1>
-        <h3>주문정보</h3>
+        <h3>주문이 정상적으로 완료되었습니다.</h3>
       </p>
       <div class="container-fluid">
         <p class="text-center">
@@ -91,14 +91,22 @@ function Order() {
             <th>수량</th>
           </thead>
           <tbody>
-            <td>1</td>
-            <td>a</td>
-            <td>2000</td>
-            <td>3</td>
+            <tr>
+              <td>1</td>
+              <td>몽쉘</td>
+              <td>3500원</td>
+              <td>4</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>몽쉘딸기맛</td>
+              <td>5000원</td>
+              <td>1</td>
+            </tr>
           </tbody>
         </Table>
       </div>
-      <div class="text-center">원</div>
+      <div class="text-center">결제 금액 : 19000원</div>
 
       {/* <div className="information">
         <label>주문완료</label>

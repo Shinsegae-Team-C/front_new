@@ -141,7 +141,7 @@ const Products = () => {
         </h1>
         <h3>상품 검색 결과</h3>
       </p>
-      <Container>
+      <Container class="text-center">
         <Row>
           <Col></Col>
           <Col>
@@ -170,7 +170,7 @@ const Products = () => {
               <style type="text/css">
                 {`
           .btn-flat {
-            background-color: #fff;
+            background-color: rgb(248, 176, 69);
             color : black
             --bs-btn-hover-color:#fff;
             --bs-btn-hover-bg: rgb(248, 176, 69);
@@ -178,7 +178,7 @@ const Products = () => {
             --bs-btn-active-color:#fff;
             --bs-btn-active-bg:rgb(248, 176, 69);
             --bs-btn-active-border-color:#0a53be;
-            width: 78px;
+            width: 100px;
           }
         `}
               </style>
@@ -221,7 +221,7 @@ const Products = () => {
         </div>
         <Row>
           <Col></Col>
-          <Col xs={3}>
+          <Col class="text-center">
             {" "}
             {say && (
               <Button variant="flat" onClick={speechHandlers}>

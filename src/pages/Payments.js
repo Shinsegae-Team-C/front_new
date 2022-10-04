@@ -91,10 +91,18 @@ function Payments() {
             <th>수량</th>
           </thead>
           <tbody>
-            <td>1</td>
-            <td>a</td>
-            <td>2000</td>
-            <td>3</td>
+            <tr>
+              <td>1</td>
+              <td>몽쉘</td>
+              <td>3500원</td>
+              <td>4</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>몽쉘딸기맛</td>
+              <td>5000원</td>
+              <td>1</td>
+            </tr>
           </tbody>
         </Table>
       </div>
@@ -127,7 +135,9 @@ function Payments() {
       <t1>총액</t1>
     </div>  */}
         <br />
-        <div class="text-center">{/* <i class="bi bi-cash"></i> */}2000원</div>
+        <div class="text-center">
+          {/* <i class="bi bi-cash"></i> */}총 금액 : 19000원
+        </div>
         <div>
           <style type="text/css">
             {`
@@ -178,7 +188,7 @@ function Payments() {
         `}
         </style>
         <Button variant="flat2" onClick={toOrder}>
-          결재하기
+          결제하기
         </Button>
       </div>
     </div>
