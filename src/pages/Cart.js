@@ -18,6 +18,15 @@ function Cart() {
   const location = useLocation();
 
   const userInfo = location.state;
+  const date = new Date();
+  const year = date.getFullYear().toString();
+  const months = date.getMonth() + 1;
+  const month = months.toString();
+  const day = date.getDate().toString();
+  const hours = date.getHours().toString();
+  const minutes = date.getMinutes().toString();
+  const seconds = date.getSeconds().toString();
+  const milliseconds = date.getMilliseconds().toString();
 
   useEffect(() => {
     if (userInfo != null) {
@@ -57,9 +66,6 @@ function Cart() {
     // { cart_id: 3, name: "c", price: 4000, product_cnt: 3, check: "false" },
   ]);
 
-  function toPayments() {
-    navigate("/payments");
-  }
   //x버튼 누르면 해당 상품 삭제
   const deleteItem = (id) => {
     const newItems = item.filter((itm) => itm.PRODUCT_ID !== id);
@@ -69,7 +75,23 @@ function Cart() {
       setTotalPrices(totalPrice - delItem.PRICE * delItem.PRODUCT_CNT);
     }
     setItems(newItems);
+    deleteFromCart(id);
   };
+
+  function deleteFromCart(productid) {
+    console.log(productid);
+    axios
+      .post("/cart/deleteCartInfo", {
+        userId: userInfo.userId,
+        productId: productid,
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   //선택한 상품의 가격들만 합치기 -> 총 가격
   const checkHandler = (checked, id) => {
@@ -80,10 +102,16 @@ function Cart() {
         return {
           ...item,
           PRODUCT_ID: itm.PRODUCT_ID,
+          productId: itm.PRODUCT_ID,
           PRODUCT_NAME: itm.PRODUCT_NAME,
-          PRICE: itm.PRICE,
-          PRODUCT_CNT: itm.PRODUCT_CNT,
+          PRICE: String(itm.PRICE),
+          PRODUCT_CNT: String(itm.PRODUCT_CNT),
           CHK_YN: "true",
+          orderId: newOrderId,
+          totalPrice: String(itm.PRICE * itm.PRODUCT_CNT),
+          addr: userInfo.address,
+          cnt: String(itm.PRODUCT_CNT),
+          userId: userInfo.userId,
         };
       });
       setItems(change);
@@ -138,6 +166,122 @@ function Cart() {
     });
     setItems(subtractQty);
   };
+  var newOrderId =
+    year + month + day + hours + minutes + seconds + milliseconds;
+
+  function toPayments() {
+    navigate("/payments", {
+      state: {
+        userId: userInfo.userId,
+        userName: userInfo.userNamer,
+        address: userInfo.address,
+        phoneNumber: userInfo.phoneNumber,
+        orderId: newOrderId,
+        orderPrice: totalPrice,
+      },
+    });
+  }
+  // const btnStyle = {
+  //   color: "white",
+  //   background: "rgb(248, 176, 69)",
+  //   // padding: ".300rem .75rem",
+  //   border: "1px solid ",
+  //   borderRadius: ".25rem",
+  //   fontSize: "0.75rem",
+  //   lineHeight: 1.5,
+  //   height: "auto",
+  //   width: "75px",
+  // };
+
+  function insertIntoOrder(e, productid) {
+    console.log(e);
+    console.log(item);
+    axios
+      .post("/cart/saveOrder", item, { withCredentials: true })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log(err.res);
+      });
+    // axios
+    //   .post("/cart/saveOrder", {
+    //     orderId: "20220925000511test",
+    //     userId: "test",
+    //     totalPrice: "12500",
+    //     addr: "test",
+    //     // productId: "00001",
+    //     // cnt: "3",
+    //   })
+    //   .then((res) => {
+    //     console.log(res);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+
+    toPayments();
+  }
+  //주문하기 버튼 클릭시 실행
+
+  //console.log(newOrderId);
+  //newOrderId +
+
+  // {
+  // "orderId":"20220925000511test",
+  // "userId":"test",
+  // "totalPrice" : "12500",
+  // "addr": "test",
+  // "productId":"00001",
+  // "cnt": "3"
+  //   },
+
+  var data = item;
+
+  //axios 주문 연동
+  // axios
+  //   .post("/cart/saveOrder", {
+  //     userId: userId,
+  //     userPw: userPw,
+  //   })
+  //   .then((res) => {
+  //     console.log(res);
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
+  // function CartDisplay({ item, i }) {
+  //   console.log(i);
+  //   return (
+  //     <>
+  //       <div className="col-md-4 text-center">
+  //         <img
+  //           src={`image/${item.PRODUCT_ID}.png`}
+  //           className="productImage"
+  //         ></img>
+  //         {/* <Button variant="flat" onKeyDown={(e) => keyPress(e, item)}>
+  //           {item.PRODUCT_ID}
+  //         </Button> */}
+  //         <br />
+  //         <button style={btnStyle} onKeyDown={(e) => keyPress(e, item)}>
+  //           {item.PRODUCT_ID}
+  //         </button>
+  //         <p>
+  //           {item.PRODUCT_NAME}
+  //           <br />
+  //           {item.PRICE}원
+  //           <br />
+  //           수량 : {item.PRODUCT_CNT}
+  //           <br />
+  //           <CloseButton
+  //             onClick={() => deleteItem(item.PRODUCT_ID)}
+  //           ></CloseButton>
+  //         </p>
+  //       </div>
+  //     </>
+  //   );
+  // }
   //화면 단
   return (
     <div>
@@ -177,6 +321,14 @@ function Cart() {
         </h1>
         <h3>장바구니</h3>
       </p>
+      {/* <div className="product-container">
+        <div className="row">
+          {item.map((itm, i) => {
+            return <CartDisplay key={i} i={i} item={item[i]}></CartDisplay>;
+          })}
+        </div>
+      </div> */}
+
       <div class="container-fluid">
         <Table bordered hover size="sm">
           <thead>
@@ -189,25 +341,13 @@ function Cart() {
           </thead>
           <tbody>
             {item.map((itm) => (
+              // <tr key="{itm}">
+              //   <td width="120px">
               <tr key="{itm}">
                 <td width="120px">
                   <style type="text/css">
                     {`
-          .btn-flat {
-            --bs-btn-color:#212529;
-            --bs-btn-border-color:#fff;
-            --bs-btn-hover-color:#fff;
-            --bs-btn-hover-bg:rgb(248, 176, 69);;
-            --bs-btn-hover-border-color:#fff;
-            --bs-btn-focus-shadow-rgb:33,37,41;
-            --bs-btn-active-color:#fff;
-            --bs-btn-active-bg:#212529;
-            --bs-btn-active-border-color:#212529;
-            --bs-btn-active-shadow:inset 0 3px 5px rgba(0, 0, 0, 0.125);
-            --bs-btn-disabled-color:#212529;
-            --bs-btn-disabled-bg:transparent;
-            --bs-btn-disabled-border-color:#212529;
-            -bs-gradient:none}
+
             .btn-flat2 {
               background-color: rgb(248, 176, 69);
               color : black
@@ -237,7 +377,7 @@ function Cart() {
                   ></input>
                 </td>
                 <td>{itm.PRODUCT_NAME}</td>
-                <td>{itm.PRICE}원</td>
+                <td>총 주문 금액 : {itm.PRICE}원</td>
                 <td>{itm.PRODUCT_CNT}</td>
                 <td>
                   <CloseButton
@@ -295,7 +435,7 @@ function Cart() {
         {totalPrice}원
       </div>
       <div class="text-center">
-        <Button variant="flat2" onClick={toPayments}>
+        <Button variant="flat2" onClick={insertIntoOrder}>
           <i class="bi bi-truck"></i> 주문하기
         </Button>
         {/* <button>주문하기</button> */}
