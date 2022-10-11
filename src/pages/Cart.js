@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useLocation } from "react-router";
 import "../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -44,7 +44,7 @@ function Cart() {
           userId: userInfo.userId,
         })
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           setItems(res.data);
         })
         .catch((err) => {
@@ -95,40 +95,52 @@ function Cart() {
 
   //선택한 상품의 가격들만 합치기 -> 총 가격
   const checkHandler = (checked, id) => {
-    const product = item.filter((itm) => itm.PRODUCT_ID === id)[0];
+    var findIndex = item.findIndex((itm) => itm.PRODUCT_ID === id);
+    // console.log(checked);
+    const change = [...item];
     if (checked) {
-      setTotalPrices(totalPrice + product.PRICE * product.PRODUCT_CNT);
-      const change = item.map((itm) => {
-        return {
-          ...item,
-          PRODUCT_ID: itm.PRODUCT_ID,
-          productId: itm.PRODUCT_ID,
-          PRODUCT_NAME: itm.PRODUCT_NAME,
-          PRICE: String(itm.PRICE),
-          PRODUCT_CNT: String(itm.PRODUCT_CNT),
-          CHK_YN: "true",
-          orderId: newOrderId,
-          totalPrice: String(itm.PRICE * itm.PRODUCT_CNT),
-          addr: userInfo.address,
-          cnt: String(itm.PRODUCT_CNT),
-          userId: userInfo.userId,
-        };
-      });
+      // console.log(checked);
+      setTotalPrices(
+        totalPrice + change[findIndex].PRICE * change[findIndex].PRODUCT_CNT
+      );
+      change[findIndex].CHK_YN = "true";
+      // console.log(change[findIndex]);
       setItems(change);
+      // temp[id].CHK_YN = "true";
+      // const change = item.map((itm) => {
+      //   // console.log(itm);
+      //   return {
+      //     PRODUCT_ID: itm.PRODUCT_ID,
+      //     productId: itm.PRODUCT_ID,
+      //     PRODUCT_NAME: itm.PRODUCT_NAME,
+      //     PRICE: String(itm.PRICE),
+      //     PRODUCT_CNT: String(itm.PRODUCT_CNT),
+      //     CHK_YN: "true",
+      //     orderId: newOrderId,
+      //     totalPrice: totalPrice,
+      //     addr: userInfo.address,
+      //     cnt: String(itm.PRODUCT_CNT),
+      //     userId: userInfo.userId,
+      //   };
+      // });
+      // console.log(temp);
     } else {
-      setTotalPrices(totalPrice - product.PRICE * product.PRODUCT_CNT);
-      const change = item.map((itm) => {
-        return {
-          ...item,
-          PRODUCT_ID: itm.PRODUCT_ID,
-          PRODUCT_NAME: itm.PRODUCT_NAME,
-          PRICE: itm.PRICE,
-          PRODUCT_CNT: itm.PRODUCT_CNT,
-          CHK_YN: "false",
-        };
-      });
+      setTotalPrices(
+        totalPrice - change[findIndex].PRICE * change[findIndex].PRODUCT_CNT
+      );
+      // console.log(item);
+      change[findIndex].CHK_YN = "false";
+      // const change = item.map((itm) => {
+      //   return {
+      //     PRODUCT_ID: itm.PRODUCT_ID,
+      //     PRODUCT_NAME: itm.PRODUCT_NAME,
+      //     PRICE: itm.PRICE,
+      //     PRODUCT_CNT: itm.PRODUCT_CNT,
+      //     CHK_YN: "false",
+      //   };
+      // });
       setItems(change);
-      console.log(change);
+      // console.log(change);
     }
   };
 
@@ -141,7 +153,6 @@ function Cart() {
             setTotalPrices(totalPrice - itm.PRICE);
           }
           return {
-            ...item,
             PRODUCT_ID: itm.PRODUCT_ID,
             PRODUCT_NAME: itm.PRODUCT_NAME,
             PRICE: itm.PRICE,
@@ -154,7 +165,6 @@ function Cart() {
             setTotalPrices(totalPrice + itm.PRICE);
           }
           return {
-            ...item,
             PRODUCT_ID: itm.PRODUCT_ID,
             PRODUCT_NAME: itm.PRODUCT_NAME,
             PRICE: itm.PRICE,
@@ -173,7 +183,7 @@ function Cart() {
     navigate("/payments", {
       state: {
         userId: userInfo.userId,
-        userName: userInfo.userNamer,
+        userName: userInfo.userName,
         address: userInfo.address,
         phoneNumber: userInfo.phoneNumber,
         orderId: newOrderId,
@@ -194,10 +204,56 @@ function Cart() {
   // };
 
   function insertIntoOrder(e, productid) {
-    console.log(e);
-    console.log(item);
+    // console.log(e);
+    if (item.length == 0) {
+      window.alert("죄송합니다. 주문가능한 상품이 없습니다.");
+      return;
+    }
+    const changeData = item
+      .filter((itm) => itm.CHK_YN === "true")
+      .map((itm) => {
+        // console.log(itm);
+        return {
+          PRODUCT_ID: itm.PRODUCT_ID,
+          productId: itm.PRODUCT_ID,
+          PRODUCT_NAME: itm.PRODUCT_NAME,
+          PRICE: String(itm.PRICE),
+          PRODUCT_CNT: String(itm.PRODUCT_CNT),
+          CHK_YN: "true",
+          orderId: newOrderId,
+          totalPrice: totalPrice,
+          addr: userInfo.address,
+          cnt: String(itm.PRODUCT_CNT),
+          userId: userInfo.userId,
+        };
+      });
+    // const changeData = item.map((itm) => {
+    //   if (itm.CHK_YN === "true") {
+    //     return {
+    //       PRODUCT_ID: itm.PRODUCT_ID,
+    //       productId: itm.PRODUCT_ID,
+    //       PRODUCT_NAME: itm.PRODUCT_NAME,
+    //       PRICE: String(itm.PRICE),
+    //       PRODUCT_CNT: String(itm.PRODUCT_CNT),
+    //       CHK_YN: "true",
+    //       orderId: newOrderId,
+    //       totalPrice: totalPrice,
+    //       addr: userInfo.address,
+    //       cnt: String(itm.PRODUCT_CNT),
+    //       userId: userInfo.userId,
+    //     };
+    //   }
+    // });
+    // console.log(DData);
+
     axios
-      .post("/cart/saveOrder", item, { withCredentials: true })
+      .post(
+        "/cart/saveOrder",
+        { result: changeData },
+        {
+          contentType: "application/json",
+        }
+      )
       .then((res) => {
         console.log(res);
       })
@@ -205,15 +261,31 @@ function Cart() {
         console.log(err);
         console.log(err.res);
       });
-    // axios
-    //   .post("/cart/saveOrder", {
-    //     orderId: "20220925000511test",
-    //     userId: "test",
-    //     totalPrice: "12500",
-    //     addr: "test",
-    //     // productId: "00001",
-    //     // cnt: "3",
+
+    // axios({
+    //   url: "/cart/saveOrder",
+    //   method: "post",
+    //   data: item,
+    // })
+    //   .then(function (response) {
+    //     // your action after success
+    //     console.log(response);
     //   })
+    //   .catch(function (error) {
+    //     // your action on error success
+    //     console.log(error);
+    //   });
+    // axios
+    //   .post("/cart/saveOrder", [
+    //     {
+    //       orderId: "20220925000511test",
+    //       userId: "test",
+    //       totalPrice: "12500",
+    //       addr: "test",
+    //       productId: "00001",
+    //       cnt: "3",
+    //     },
+    //   ])
     //   .then((res) => {
     //     console.log(res);
     //   })
@@ -236,8 +308,6 @@ function Cart() {
   // "productId":"00001",
   // "cnt": "3"
   //   },
-
-  var data = item;
 
   //axios 주문 연동
   // axios
@@ -305,22 +375,39 @@ function Cart() {
             <Nav.Link>
               <i class="bi bi-volume-up"></i> 음성듣기
             </Nav.Link>
-            <Nav.Link href="/">
+            <Nav.Link
+              as={Link}
+              to="/"
+              state={{
+                userId: userInfo.userId,
+                userName: userInfo.userName,
+                address: userInfo.address,
+                phoneNumber: userInfo.phoneNumber,
+              }}
+            >
               <i class="bi bi-house"></i> 홈으로
             </Nav.Link>
-            <Nav.Link href="/search">
+            <Nav.Link
+              as={Link}
+              to="/search"
+              state={{
+                userId: userInfo.userId,
+                userName: userInfo.userName,
+                address: userInfo.address,
+                phoneNumber: userInfo.phoneNumber,
+              }}
+            >
               <i class="bi bi-search"></i> 상품검색
             </Nav.Link>
           </Nav>
         </Container>
       </Navbar>
       <br />
-      <p class="text-center">
-        <h1 class="display-2">
-          <i class="bi bi-cart2"></i>
-        </h1>
-        <h3>장바구니</h3>
-      </p>
+      <h1 class="display-2 text-center">
+        <i class="bi bi-cart2"></i>
+      </h1>
+      <h3 class="text-center">장바구니</h3>
+      <br />
       {/* <div className="product-container">
         <div className="row">
           {item.map((itm, i) => {
@@ -341,8 +428,6 @@ function Cart() {
           </thead>
           <tbody>
             {item.map((itm) => (
-              // <tr key="{itm}">
-              //   <td width="120px">
               <tr key="{itm}">
                 <td width="120px">
                   <style type="text/css">

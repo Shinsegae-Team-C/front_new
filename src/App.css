@@ -67,3 +67,31 @@ input[type=submit]{
   background-color: rgb(248, 176, 69);
   border-color:rgb(248, 176, 69);
 }
+
+.productImage{
+  width :50%;
+  height: auto;
+  overflow : hidden;
+  /* border:1px solid rgb(38, 34, 35); */
+}
+
+.productImage2{
+  width:90%;
+  height:auto;
+  overflow : hidden;
+}
+
+.productImageCart{
+  width: 10%;
+  height : auto;
+  overflow : hidden;
+}
+
+.productFont{
+  font-size : 100px;
+}
+
+.orderFont{
+  line-height: 3px;
+
+}

@@ -1,17 +1,9 @@
 import "../App.css";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {
-  Container,
-  Navbar,
-  Nav,
-  Button,
-  Row,
-  Col,
-  Table,
-} from "react-bootstrap";
+import { Container, Navbar, Nav, Button, Row, Col } from "react-bootstrap";
 import axios from "axios";
 import { useLocation } from "react-router";
 axios.defaults.withCredentials = true;
@@ -34,6 +26,7 @@ const Products = () => {
   function insertIntoCart(e, productid) {
     console.log(e);
     console.log(productid);
+    window.alert("상품이 담겼습니다.");
     axios
       .post("/productlist/saveProduct", {
         userId: userInfo.userId,
@@ -45,6 +38,24 @@ const Products = () => {
       .catch((err) => {
         console.log(err);
       });
+  }
+  // const toProductDetail = (productId) => {
+  // navigate(`/product/${productId}`, {
+  //   state: {
+  //     productId: productId,
+  //   },
+  // });
+  // };
+
+  function toProductDetail(e, productId) {
+    // console.log(productId);
+    console.log(userInfo.productSearchName);
+    navigate(`/product/${productId}`, {
+      state: {
+        productId: productId,
+        productSearchName: userInfo.productSearchName,
+      },
+    });
   }
 
   const { queryId } = useParams(); // const 변수명 = useParams().파라미터명
@@ -65,6 +76,9 @@ const Products = () => {
         .then((res) => {
           console.log(res);
           setData(res.data);
+          if (res.data.length == 0) {
+            window.alert("검색어와 일치하는 상품이 없습니다.");
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -77,13 +91,24 @@ const Products = () => {
     shoppingData();
   }, []);
   // const products = [`1번 ${productId}`,`2번${productId}`];
-  const speechHandler = (msg) => {
-    msg.text = ourText;
-    window.speechSynthesis.speak(msg);
-  };
+  // const speechHandler = (msg) => {
+  //   msg.text = ourText;
+  //   window.speechSynthesis.speak(msg);
+  // };
   const navigate = useNavigate();
-  const backHandler = () => {
-    navigate("/search");
+  // const backHandler = () => {
+  //   navigate("/search");
+  // };
+
+  const toCart = () => {
+    navigate("/cart", {
+      state: {
+        userId: userInfo.userId,
+        userName: userInfo.userName,
+        address: userInfo.address,
+        phoneNumber: userInfo.phoneNumber,
+      },
+    });
   };
 
   var say = [];
@@ -100,6 +125,62 @@ const Products = () => {
     window.speechSynthesis.speak(msg);
     // console.log(msg);
   };
+  const btnStyle = {
+    color: "black",
+    background: "white",
+    // padding: ".300rem .75rem",
+    border: "1px solid white",
+    borderRadius: ".25rem",
+    fontSize: "1rem",
+    lineHeight: 1.5,
+    height: "auto",
+    width: "75px",
+  };
+  function ProductDisplay({ data, i }) {
+    console.log(i);
+
+    return (
+      <>
+        <div className="col-md-4 text-center">
+          <img
+            src={`../image/${data.productId}.jpg`}
+            className="productImage"
+            onClick={(e) => toProductDetail(e, data.productId)}
+          ></img>
+          {/* <Button variant="flat" onKeyDown={(e) => keyPress(e, item)}>
+            {item.PRODUCT_ID}
+          </Button> */}
+          <br />
+          {/* <button style={btnStyle} onKeyDown={(e) => keyPress(e, item)}>
+            {item.PRODUCT_ID}
+          </button> */}
+          {/* <Button
+                        variant="flat"
+                        onClick={(e) => insertIntoCart(e, item.productId)}
+                      >
+                        <h3 class="text-center">
+                          <i class="bi bi-cart-plus"></i>
+                        </h3>
+                      </Button> */}
+          <h5>{data.productName}</h5>
+          <p>
+            {/* 상품번호: {data.productId}
+            <br /> */}
+            {data.price}원
+            <br />
+            <button
+              style={btnStyle}
+              onClick={(e) => insertIntoCart(e, data.productId)}
+            >
+              <h5 class="text-center">
+                <i class="bi bi-cart-plus"></i>
+              </h5>
+            </button>
+          </p>
+        </div>
+      </>
+    );
+  }
   return (
     <div>
       <link
@@ -109,23 +190,38 @@ const Products = () => {
       <Navbar className="soso-navbar" variant="light">
         <Container>
           <Navbar.Brand href="/" className="soso-black">
-            {/* <img
-              src="image/puu.png"
+            <img
+              src="../image/puu.png"
               width="30"
               height="30"
               className="d-inline-block align-top"
               alt=""
-            /> */}
+            />
             소소배송
           </Navbar.Brand>
           <Nav>
-            <Nav.Link>
-              <i class="bi bi-volume-up"></i> 음성듣기
-            </Nav.Link>
-            <Nav.Link href="/">
+            <Nav.Link
+              as={Link}
+              to="/"
+              state={{
+                userId: userInfo.userId,
+                userName: userInfo.userName,
+                address: userInfo.address,
+                phoneNumber: userInfo.phoneNumber,
+              }}
+            >
               <i class="bi bi-house"></i> 홈으로
             </Nav.Link>
-            <Nav.Link href="/search">
+            <Nav.Link
+              as={Link}
+              to="/search"
+              state={{
+                userId: userInfo.userId,
+                userName: userInfo.userName,
+                address: userInfo.address,
+                phoneNumber: userInfo.phoneNumber,
+              }}
+            >
               <i class="bi bi-search"></i> 상품검색
             </Nav.Link>
           </Nav>
@@ -157,7 +253,17 @@ const Products = () => {
           <Col></Col>
         </Row>
         <br />
-        <div>
+        <div className="product-container">
+          <div className="row">
+            {data &&
+              data.map((itm, i) => {
+                return (
+                  <ProductDisplay key={i} i={i} data={data[i]}></ProductDisplay>
+                );
+              })}
+          </div>
+        </div>
+        {/* <div>
           <Table bordered over size="sm">
             <thead>
               <th>상품 번호</th>
@@ -185,10 +291,10 @@ const Products = () => {
               {data &&
                 data.map((item) => (
                   <tr>
-                    {/* <ul key={item.productId}> */}
+                    {/* <ul key={item.productId}> 
                     <td>{item.productId}</td>
                     <td>{item.productImg}</td>
-                    {/* <li>{item.productImg}</li> */}
+                    {/* <li>{item.productImg}</li> 
                     <td>
                       <a href={`/product/${item.productId}`}>
                         {item.productName}
@@ -198,12 +304,12 @@ const Products = () => {
                       <a href={`/product/${item.productId}`}>
                         {item.productName}
                       </a>
-                    </li> */}
+                    </li> *
                     <td>{item.price}</td>
                     {/* <li>{item.price}</li> */}
-                    {/* <li>{item.productId}</li> */}
-                    {/* <button onClick={speechHandlers(item.productName)}>speech</button> */}
-                    {/* </ul> */}
+        {/* <li>{item.productId}</li> */}
+        {/* <button onClick={speechHandlers(item.productName)}>speech</button> */}
+        {/* </ul> 
                     <td width="10px">
                       <Button
                         variant="flat"
@@ -218,16 +324,32 @@ const Products = () => {
                 ))}
             </tbody>
           </Table>
-        </div>
+        </div> */}
         <Row>
           <Col></Col>
           <Col class="text-center">
-            {" "}
+            <style type="text/css">
+              {`
+          .btn-flat {
+            background-color: rgb(248, 176, 69);
+            color : black
+            --bs-btn-hover-color:#fff;
+            --bs-btn-hover-bg: rgb(248, 176, 69);
+            --bs-btn-hover-border-color:#0a58ca;
+            --bs-btn-active-color:#fff;
+            --bs-btn-active-bg:rgb(248, 176, 69);
+            --bs-btn-active-border-color:#0a53be;
+          }
+        `}
+            </style>{" "}
             {say && (
               <Button variant="flat" onClick={speechHandlers}>
-                <i class="bi bi-mic"></i>말하기
+                <i class="bi bi-volume-up"></i>음성 듣기
               </Button>
             )}
+            <Button variant="flat" onClick={toCart}>
+              <i class="bi bi-cart2"></i>장바구니로 가기
+            </Button>
             {/* <Button variant="flat" onClick={() => speechHandler(msg)}>
               <i class="bi bi-mic"></i>말하기
             </Button> */}

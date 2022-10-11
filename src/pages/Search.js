@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSpeechRecognition } from "react-speech-kit";
 import navigateSearch from "../sounds/navigate.mp3";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Navbar, Nav, Row, Col } from "react-bootstrap";
 import { useLocation } from "react-router";
@@ -80,9 +80,10 @@ const Search = () => {
         navigate(`/products/${order}`, {
           state: {
             userId: userInfo.userId,
-            userName: userInfo.userNamer,
+            userName: userInfo.userName,
             address: userInfo.address,
             phoneNumber: userInfo.phoneNumber,
+            productSearchName: order,
           },
         });
       }, 2000);
@@ -115,7 +116,16 @@ const Search = () => {
             <Nav.Link>
               <i class="bi bi-volume-up"></i> 음성듣기
             </Nav.Link>
-            <Nav.Link href="/">
+            <Nav.Link
+              as={Link}
+              to="/"
+              state={{
+                userId: userInfo.userId,
+                userName: userInfo.userName,
+                address: userInfo.address,
+                phoneNumber: userInfo.phoneNumber,
+              }}
+            >
               <i class="bi bi-house"></i> 홈으로
             </Nav.Link>
           </Nav>

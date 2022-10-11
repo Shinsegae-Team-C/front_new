@@ -85,6 +85,7 @@ const Main = (props) => {
                 <i class="bi bi-cart2"></i> 장바구니
               </Nav.Link>
             </Nav>
+
             // <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             // <ul>
             //   <Link

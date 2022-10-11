@@ -23,8 +23,21 @@ function Signup() {
       userName: userName,
       address: address,
       phoneNumber: phoneNumber,
-    }).then(() => {
+    }).then((res) => {
       console.log("success");
+      console.log(res);
+      var status = res.data;
+      if (status == "001") {
+        window.alert("회원가입에 성공했습니다.");
+      } else if (status == "002") {
+        window.alert("이미 존재하는 아이디입니다.");
+      } else if (status == "009") {
+        window.alert("올바르지 않은 전화번호 형식입니다.");
+      } else if (status == "010") {
+        window.alert("전화번호는 숫자만 입력가능합니다.");
+      } else if (status == "011") {
+        window.alert("중복된 전화번호입니다.");
+      }
     });
   };
 

@@ -1,5 +1,6 @@
 import "../App.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router";
 import Axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {
@@ -11,23 +12,41 @@ import {
   Button,
   Table,
 } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function Order() {
   let navigate = useNavigate();
+  const location = useLocation();
+  const userInfo = location.state;
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [phonenumber, setPhonenumber] = useState("");
 
   const [userList, setUserList] = useState([]);
 
+  useEffect(() => {
+    if (userInfo != null) {
+      const userId = userInfo.userId;
+      const userName = userInfo.userName;
+      const address = userInfo.address;
+      const phoneNumber = userInfo.phoneNumber;
+    }
+  });
+
   function toHome() {
-    navigate("/");
+    navigate("/", {
+      state: {
+        userId: userInfo.userId,
+        userName: userInfo.userName,
+        address: userInfo.address,
+        phoneNumber: userInfo.phoneNumber,
+      },
+    });
   }
 
-  Axios.post("/user").then((response) => {
-    setUserList(response.data);
-  });
+  // Axios.post("/user").then((response) => {
+  //   setUserList(response.data);
+  // });
 
   return (
     <div>
@@ -48,13 +67,28 @@ function Order() {
             소소배송
           </Navbar.Brand>
           <Nav className="me-auto">
-            <Nav.Link href="/search">
+            <Nav.Link
+              as={Link}
+              to="/search"
+              state={{
+                userId: userInfo.userId,
+                userName: userInfo.userName,
+                address: userInfo.address,
+                phoneNumber: userInfo.phoneNumber,
+              }}
+            >
               <i class="bi bi-search"></i> 상품검색
             </Nav.Link>
-            <Nav.Link href="/products">
-              <i class="bi bi-shop"></i> 상품목록
-            </Nav.Link>
-            <Nav.Link href="/cart">
+            <Nav.Link
+              as={Link}
+              to="/cart"
+              state={{
+                userId: userInfo.userId,
+                userName: userInfo.userName,
+                address: userInfo.address,
+                phoneNumber: userInfo.phoneNumber,
+              }}
+            >
               <i class="bi bi-cart2"></i> 장바구니
             </Nav.Link>
           </Nav>
@@ -62,51 +96,52 @@ function Order() {
             <Nav.Link>
               <i class="bi bi-volume-up"></i> 음성듣기
             </Nav.Link>
-            <Nav.Link href="/">
+            <Nav.Link
+              as={Link}
+              to="/"
+              state={{
+                userId: userInfo.userId,
+                userName: userInfo.userName,
+                address: userInfo.address,
+                phoneNumber: userInfo.phoneNumber,
+              }}
+            >
               <i class="bi bi-house"></i> 홈으로
             </Nav.Link>
           </Nav>
         </Container>
       </Navbar>
       <br />
+      <br />
+      <br />
       <p class="text-center">
         <h1 class="display-2">
           <i class="bi bi-cart-check"></i>
         </h1>
+        <br />
         <h3>주문이 정상적으로 완료되었습니다.</h3>
       </p>
+      <br />
       <div class="container-fluid">
+        <h5 class="text-center">주문번호 : {userInfo.orderId}</h5>
+        <br />
         <p class="text-center">
-          <label>이름: 김** </label>
+          <h5>배송지 정보</h5>
+          <label>
+            <i class="bi bi-person-fill"></i> {userInfo.userName}
+          </label>
           <br />
-          <label>주소: 경기도 수원시</label>
+          <label>
+            <i class="bi bi-telephone"></i> {userInfo.phoneNumber}
+          </label>
           <br />
-          <label>번호: 010-1111-1111</label>
+          <label>
+            <i class="bi bi-truck"></i> {userInfo.address}
+          </label>
+          <br />
         </p>
-        <Table bordered hover size="sm">
-          <thead>
-            <th>#</th>
-            <th>상품명</th>
-            <th>가격</th>
-            <th>수량</th>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>몽쉘</td>
-              <td>3500원</td>
-              <td>4</td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>몽쉘딸기맛</td>
-              <td>5000원</td>
-              <td>1</td>
-            </tr>
-          </tbody>
-        </Table>
       </div>
-      <div class="text-center">결제 금액 : 19000원</div>
+      <div class="text-center">주문 금액 : {userInfo.orderPrice}원</div>
 
       {/* <div className="information">
         <label>주문완료</label>
