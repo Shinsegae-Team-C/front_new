@@ -5,6 +5,7 @@ import { useLocation } from "react-router";
 import { Container, Navbar, Nav } from "react-bootstrap";
 import "../App.css";
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 const Main = (props) => {
   const [isAuth, setIsAuth] = useState(false);
@@ -23,6 +24,14 @@ const Main = (props) => {
       setIsAuth(userId);
     }
   });
+
+  const onClickHandler = () => {
+    axios.get("/api/users/logout").then((res) => {
+      console.log(res);
+      if (res.data.success) {
+      }
+    });
+  };
 
   console.log("isAuth : " + Boolean(isAuth));
   return (
@@ -84,6 +93,7 @@ const Main = (props) => {
               >
                 <i class="bi bi-cart2"></i> 장바구니
               </Nav.Link>
+              <Nav.Link onClick={onClickHandler}>로그아웃하기</Nav.Link>
             </Nav>
 
             // <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -145,12 +155,11 @@ const Main = (props) => {
           <br />
         </h1>
         <br />
-        <h4 class="text-muted">아래의 마이크를 누르고 말씀해주세요 :)</h4>
         <br />
       </p>
       <div class="text-center">
         <img
-          src="image/voice-search.png"
+          src="image/puu.png"
           width="300"
           height="300"
           className="d-inline-block align-top"

@@ -418,7 +418,7 @@ function Cart() {
 
       <div class="container-fluid">
         <Table bordered hover size="sm">
-          <thead>
+          <thead class="text-center">
             <th>#</th>
             <th>선택</th>
             <th>상품명</th>
@@ -426,7 +426,7 @@ function Cart() {
             <th>수량</th>
             <th></th>
           </thead>
-          <tbody>
+          <tbody class="text-center">
             {item.map((itm) => (
               <tr key="{itm}">
                 <td width="120px">
@@ -445,14 +445,33 @@ function Cart() {
             }
         `}
                   </style>
-                  <Button variant="flat" onKeyDown={(e) => keyPress(e, itm)}>
-                    {itm.PRODUCT_ID}
+                  {/* <img
+                    src={`../image/${itm.PRODUCT_ID}.jpg`}
+                    className="productImage2"
+                    onKeyDown={(e) => keyPress(e, itm)}
+                  ></img> */}
+                  <Button
+                    variant="flat"
+                    onKeyDown={(e) => keyPress(e, itm)}
+                    className="text-center"
+                  >
+                    <img
+                      src={`../image/${itm.PRODUCT_ID}.jpg`}
+                      className="productImage"
+                    ></img>
                   </Button>
+                  <br />
+                  <br />
+                  <br />
+                  <br />
+                  <br />
+                  <br />
                   {/* <button onKeyDown={(e) => keyPress(e, itm)}>
                     {itm.cart_id}
                   </button> */}
                 </td>
                 <td>
+                  <br />
                   <input
                     class="form-check-input"
                     type="checkbox"
@@ -461,9 +480,17 @@ function Cart() {
                     }}
                   ></input>
                 </td>
-                <td>{itm.PRODUCT_NAME}</td>
-                <td>총 주문 금액 : {itm.PRICE}원</td>
-                <td>{itm.PRODUCT_CNT}</td>
+                <td>
+                  <br />
+                  {itm.PRODUCT_NAME}
+                </td>
+                <td>
+                  <br />총 주문 금액 : {itm.PRICE}원
+                </td>
+                <td>
+                  <br />
+                  {itm.PRODUCT_CNT}
+                </td>
                 <td>
                   <CloseButton
                     onClick={() => deleteItem(itm.PRODUCT_ID)}

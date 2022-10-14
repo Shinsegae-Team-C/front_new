@@ -81,6 +81,12 @@ input[type=submit]{
   overflow : hidden;
 }
 
+.productImage3{
+  width:60%;
+  height:auto;
+  overflow : hidden;
+}
+
 .productImageCart{
   width: 10%;
   height : auto;

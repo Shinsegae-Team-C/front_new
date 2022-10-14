@@ -6,6 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Navbar, Nav, Button, Row, Col } from "react-bootstrap";
 import axios from "axios";
 import { useLocation } from "react-router";
+import { useSpeechRecognition } from "react-speech-kit";
 axios.defaults.withCredentials = true;
 axios.defaults.headers["Access-Control-Allow-Origin"] = "*";
 
@@ -24,8 +25,8 @@ const Products = () => {
   });
 
   function insertIntoCart(e, productid) {
-    console.log(e);
-    console.log(productid);
+    // console.log(e);
+    // console.log(productid);
     window.alert("상품이 담겼습니다.");
     axios
       .post("/productlist/saveProduct", {
@@ -117,14 +118,39 @@ const Products = () => {
       data.map((item, idx) =>
         say.push(idx + 1 + "번째 상품" + item.productName)
       );
+      say.push(" 원하시는 상품의 번호를 말해주세요");
     }
   }, [data]);
+
+  var synth = window.speechSynthesis;
+
   const speechHandlers = () => {
     // list.map((item) => setSay([...say, item.productName]));
     msg.text = say;
-    window.speechSynthesis.speak(msg);
+    synth.speak(msg);
     // console.log(msg);
   };
+
+  const [value, setValue] = useState("");
+  const { listen, listening, stop } = useSpeechRecognition({
+    onResult: (result) => {
+      // 음성인식 결과가 value에 저장
+      setValue(result);
+    },
+  });
+  useEffect(() => {
+    speechHandlers();
+    setTimeout(function () {
+      listen({ interimResults: false });
+      // console.log(value);
+    }, 1000);
+  }, [msg]);
+
+  useEffect(() => {
+    stop();
+    console.log(value);
+  }, [value]);
+
   const btnStyle = {
     color: "black",
     background: "white",
