@@ -1,46 +1,79 @@
 import "../App.css";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router";
-import Axios from "axios";
+// import Axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {
-  Container,
-  Navbar,
-  Nav,
-  Row,
-  Col,
-  Button,
-  Table,
-} from "react-bootstrap";
+import { Container, Navbar, Nav, Button } from "react-bootstrap";
 import { useNavigate, Link } from "react-router-dom";
 
 function Order() {
   let navigate = useNavigate();
   const location = useLocation();
   const userInfo = location.state;
-  const [name, setName] = useState("");
-  const [address, setAddress] = useState("");
-  const [phonenumber, setPhonenumber] = useState("");
+  // const [name, setName] = useState("");
+  // const [address, setAddress] = useState("");
+  // const [phonenumber, setPhonenumber] = useState("");
+  const [User, setUser] = useState(Object);
+
+  useEffect(() => {
+    setUser(JSON.parse(sessionStorage.getItem("info")));
+  }, []);
 
   const [userList, setUserList] = useState([]);
+  const movePg = (e) => {
+    if (e.keyCode === 13) {
+      setTimeout(function () {
+        navigate("/", {
+          // state: {
+          //   userId: userInfo.userId,
+          //   userName: userInfo.userName,
+          //   address: userInfo.address,
+          //   phoneNumber: userInfo.phoneNumber,
+          // },
+        });
+      }, 1000);
+    } else if (e.keyCode === 81) {
+      setTimeout(function () {
+        navigate("/search", {
+          // state: {
+          //   userId: userInfo.userId,
+          //   userName: userInfo.userName,
+          //   address: userInfo.address,
+          //   phoneNumber: userInfo.phoneNumber,
+          // },
+        });
+      }, 1000);
+    }
+    // navigate("/", {
+    //   state: {
+    //     userId: userData.userId,
+    //     userName: userData.userName,
+    //     address: userData.address,
+    //     phoneNumber: userData.phoneNumber,
+    //   },
+    // });
+    // else if (e.keyCode == 13) {
+
+    // }
+  };
 
   useEffect(() => {
     if (userInfo != null) {
-      const userId = userInfo.userId;
-      const userName = userInfo.userName;
-      const address = userInfo.address;
-      const phoneNumber = userInfo.phoneNumber;
+      // const userId = userInfo.userId;
+      // const userName = userInfo.userName;
+      // const address = userInfo.address;
+      // const phoneNumber = userInfo.phoneNumber;
     }
   });
 
   function toHome() {
     navigate("/", {
-      state: {
-        userId: userInfo.userId,
-        userName: userInfo.userName,
-        address: userInfo.address,
-        phoneNumber: userInfo.phoneNumber,
-      },
+      // state: {
+      //   userId: userInfo.userId,
+      //   userName: userInfo.userName,
+      //   address: userInfo.address,
+      //   phoneNumber: userInfo.phoneNumber,
+      // },
     });
   }
 
@@ -70,16 +103,16 @@ function Order() {
             <Nav.Link
               as={Link}
               to="/search"
-              state={{
-                userId: userInfo.userId,
-                userName: userInfo.userName,
-                address: userInfo.address,
-                phoneNumber: userInfo.phoneNumber,
-              }}
+              // state={{
+              //   userId: userInfo.userId,
+              //   userName: userInfo.userName,
+              //   address: userInfo.address,
+              //   phoneNumber: userInfo.phoneNumber,
+              // }}
             >
-              <i class="bi bi-search"></i> 상품검색
+              <i className="bi bi-search"></i> 상품검색
             </Nav.Link>
-            <Nav.Link
+            {/* <Nav.Link
               as={Link}
               to="/cart"
               state={{
@@ -90,58 +123,69 @@ function Order() {
               }}
             >
               <i class="bi bi-cart2"></i> 장바구니
-            </Nav.Link>
+            </Nav.Link> */}
           </Nav>
           <Nav>
-            <Nav.Link>
+            {/* <Nav.Link>
               <i class="bi bi-volume-up"></i> 음성듣기
-            </Nav.Link>
+            </Nav.Link> */}
+            <Navbar.Collapse>
+              <Navbar.Text>
+                <a href="#login">{User.userName}님</a>
+              </Navbar.Text>
+            </Navbar.Collapse>
             <Nav.Link
               as={Link}
               to="/"
-              state={{
-                userId: userInfo.userId,
-                userName: userInfo.userName,
-                address: userInfo.address,
-                phoneNumber: userInfo.phoneNumber,
-              }}
+              // state={{
+              //   userId: userInfo.userId,
+              //   userName: userInfo.userName,
+              //   address: userInfo.address,
+              //   phoneNumber: userInfo.phoneNumber,
+              // }}
             >
-              <i class="bi bi-house"></i> 홈으로
+              <i className="bi bi-house"></i> 홈으로
             </Nav.Link>
           </Nav>
         </Container>
       </Navbar>
+      <div>
+        <input
+          type="text"
+          className="form-control mt-1"
+          onKeyDown={(e) => movePg(e)}
+          autoFocus
+        ></input>
+      </div>
       <br />
       <br />
       <br />
-      <p class="text-center">
-        <h1 class="display-2">
-          <i class="bi bi-cart-check"></i>
-        </h1>
+      <h1 className="display-2 text-center">
+        <i className="bi bi-cart-check"></i>
+      </h1>
+      <br />
+      <h3 className="text-center">주문이 정상적으로 완료되었습니다.</h3>
+      <br />
+      <div className="container-fluid">
+        <h5 className="text-center">주문번호 : {userInfo.orderId}</h5>
         <br />
-        <h3>주문이 정상적으로 완료되었습니다.</h3>
-      </p>
-      <br />
-      <div class="container-fluid">
-        <h5 class="text-center">주문번호 : {userInfo.orderId}</h5>
-        <br />
-        <p class="text-center">
-          <h5>배송지 정보</h5>
+        <h5 className="text-center">배송지 정보</h5>
+        <p className="text-center">
           <label>
-            <i class="bi bi-person-fill"></i> {userInfo.userName}
+            <i className="bi bi-person-fill"></i> {User.userName}
           </label>
           <br />
           <label>
-            <i class="bi bi-telephone"></i> {userInfo.phoneNumber}
+            <i className="bi bi-telephone"></i> {User.phoneNumber}
           </label>
           <br />
           <label>
-            <i class="bi bi-truck"></i> {userInfo.address}
+            <i className="bi bi-truck"></i> {User.address}
           </label>
           <br />
         </p>
       </div>
-      <div class="text-center">주문 금액 : {userInfo.orderPrice}원</div>
+      <div className="text-center">주문 금액 : {userInfo.orderPrice}원</div>
 
       {/* <div className="information">
         <label>주문완료</label>
@@ -168,7 +212,7 @@ function Order() {
       {/* <div className='totalpirce'> 
         <t1>총액</t1>
       </div>  */}
-      <div class="text-center">
+      <div className="text-center">
         <style type="text/css">
           {`
           .btn-flat {
@@ -184,7 +228,7 @@ function Order() {
         `}
         </style>
         <Button variant="flat" onClick={toHome}>
-          <i class="bi bi-house"></i> 홈으로
+          <i className="bi bi-house"></i> 홈으로
         </Button>
         {/* <button>주문하기</button> */}
       </div>

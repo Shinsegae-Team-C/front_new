@@ -1,7 +1,6 @@
 import "../App.css";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useLocation } from "react-router";
 import { Container, Navbar, Nav, Button, Row, Col } from "react-bootstrap";
@@ -16,25 +15,31 @@ const Product = () => {
   const location = useLocation();
 
   const userInfo = location.state;
+  const [User, setUser] = useState(Object);
+
+  useEffect(() => {
+    setUser(JSON.parse(sessionStorage.getItem("info")));
+  }, []);
 
   useEffect(() => {
     if (userInfo != null) {
-      const userId = userInfo.userId;
-      const userName = userInfo.userName;
-      const address = userInfo.address;
-      const phoneNumber = userInfo.phoneNumber;
+      // const userId = userInfo.userId;
+      // const userName = userInfo.userName;
+      // const address = userInfo.address;
+      // const phoneNumber = userInfo.phoneNumber;
+      // const productSearchName = userInfo.productSearchName;
     }
   });
 
   function toProducts() {
     navigate(`/products/${userInfo.productSearchName}`, {
-      state: {
-        userId: userInfo.userId,
-        userName: userInfo.userName,
-        address: userInfo.address,
-        phoneNumber: userInfo.phoneNumber,
-        productSearchName: userInfo.productSearchName,
-      },
+      // state: {
+      //   userId: userInfo.userId,
+      //   userName: userInfo.userName,
+      //   address: userInfo.address,
+      //   phoneNumber: userInfo.phoneNumber,
+      //   productSearchName: userInfo.productSearchName,
+      // },
     });
   }
   // const shoppingData = async () => {
@@ -58,7 +63,19 @@ const Product = () => {
   // };
   const getProductData = async () => {
     try {
-      const result = await axios
+      // const result = await axios
+      //   .post("/productlist/selectProductItem", {
+      //     productId: productId,
+      //   })
+      //   .then((res) => {
+      //     // console.log("here");
+      //     console.log(res.data);
+      //     setData(res.data);
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
+      await axios
         .post("/productlist/selectProductItem", {
           productId: productId,
         })
@@ -97,46 +114,49 @@ const Product = () => {
             소소배송
           </Navbar.Brand>
           <Nav>
-            <Nav.Link>
+            {/* <Nav.Link>
               <i class="bi bi-volume-up"></i> 음성듣기
-            </Nav.Link>
+            </Nav.Link> */}
+            <Navbar.Collapse>
+              <Navbar.Text>
+                <a href="#login">{User.userName}님</a>
+              </Navbar.Text>
+            </Navbar.Collapse>
             <Nav.Link
               as={Link}
               to="/"
-              state={{
-                userId: userInfo.userId,
-                userName: userInfo.userName,
-                address: userInfo.address,
-                phoneNumber: userInfo.phoneNumber,
-              }}
+              // state={{
+              //   userId: userInfo.userId,
+              //   userName: userInfo.userName,
+              //   address: userInfo.address,
+              //   phoneNumber: userInfo.phoneNumber,
+              // }}
             >
-              <i class="bi bi-house"></i> 홈으로
+              <i className="bi bi-house"></i> 홈으로
             </Nav.Link>
             <Nav.Link
               as={Link}
               to="/search"
-              state={{
-                userId: userInfo.userId,
-                userName: userInfo.userName,
-                address: userInfo.address,
-                phoneNumber: userInfo.phoneNumber,
-              }}
+              // state={{
+              //   userId: userInfo.userId,
+              //   userName: userInfo.userName,
+              //   address: userInfo.address,
+              //   phoneNumber: userInfo.phoneNumber,
+              // }}
             >
-              <i class="bi bi-search"></i> 상품검색
+              <i className="bi bi-search"></i> 상품검색
             </Nav.Link>
           </Nav>
         </Container>
       </Navbar>
       <br />
-      <p class="text-center">
-        <h1 class="display-2">
-          <i class="bi bi-handbag"></i>
-        </h1>
-      </p>
+      <h1 className="display-2 text-center">
+        <i className="bi bi-handbag"></i>
+      </h1>
       <Container>
         <Row>
           <Col></Col>
-          <Col class="text-center" xs={2}>
+          <Col className="text-center" xs={2}>
             {" "}
             <h3>상품 상세페이지</h3>
           </Col>
@@ -160,7 +180,7 @@ const Product = () => {
         `}
           </style>
           <Col xs={5}>
-            <h1 class="display-2">
+            <h1 className="display-2">
               <img
                 src={`../image/${productId}.jpg`}
                 className="productImage2"
@@ -171,7 +191,7 @@ const Product = () => {
             <br />
             <h1>{data.PRODUCT_NAME}</h1>
             {/* <p>상품명 : </p> */}
-            <p class="lead">
+            <p className="lead">
               {" "}
               {"  "}₩ {data.PRICE}
             </p>
@@ -193,7 +213,7 @@ const Product = () => {
           <Col xs={3}>
             {" "}
             <Button variant="flat" onClick={toProducts}>
-              <i class="bi bi-search"></i> 상품 목록
+              <i className="bi bi-search"></i> 상품 목록
             </Button>
           </Col>
           <Col></Col>

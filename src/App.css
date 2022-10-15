@@ -69,7 +69,7 @@ input[type=submit]{
 }
 
 .productImage{
-  width :50%;
+  width :40%;
   height: auto;
   overflow : hidden;
   /* border:1px solid rgb(38, 34, 35); */
@@ -101,3 +101,57 @@ input[type=submit]{
   line-height: 3px;
 
 }
+
+.MainImage{
+  width : 35.5%;
+  height : auto;
+  overflow : hidden;
+  float : right;
+  top : 20%
+
+}
+
+.MainFont{
+  float : center;
+  top : 50%
+}
+
+.MainImgContainer {
+  width: 40px;
+  height: 100px;
+  overflow: hidden;
+}
+
+.MainImgContainer > img {
+  position: absolute;
+  width:40%;
+  /* height: 100%; */
+  top: 35%;
+  left: 40%;
+  transform: translate(-50%, -50%);
+}
+
+.MainImgContainer2 {
+  width: 40px;
+  height: 100px;
+  overflow: hidden;
+}
+
+.MainImgContainer2 > img {
+  position: absolute;
+  width:40%;
+  height: auto;
+  top: 62.3%;
+  left: 80%;
+  transform: translate(-50%, -50%);
+}
+.table { border-collapse:collapse; }  
+th, td { border:1px solid black; }
+[class^=count-] tr {
+  counter-increment: mycounter;
+}
+[class^=count-] tr>td:first-child:before {
+  content: counter(mycounter) " ";
+}
+.count-1 tr:nth-child(1) { counter-reset: mycounter; }
+.count-2 tr:nth-child(2) { counter-reset: mycounter; }

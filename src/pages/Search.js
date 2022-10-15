@@ -8,15 +8,21 @@ import { useLocation } from "react-router";
 
 const Search = () => {
   const location = useLocation();
-
   const userInfo = location.state;
+  const [User, setUser] = useState(Object);
+
+  useEffect(() => {
+    setUser(JSON.parse(sessionStorage.getItem("info")));
+  }, []);
+
+  console.log(User);
 
   useEffect(() => {
     if (userInfo != null) {
-      const userId = userInfo.userId;
-      const userName = userInfo.userName;
-      const address = userInfo.address;
-      const phoneNumber = userInfo.phoneNumber;
+      // const userId = userInfo.userId;
+      // const userName = userInfo.userName;
+      // const address = userInfo.address;
+      // const phoneNumber = userInfo.phoneNumber;
     }
   });
   //안내 음성을 출력하기 위한 오디오 함수
@@ -114,13 +120,15 @@ const Search = () => {
         console.log(value);
         stop();
         setTimeout(function () {
+          console.log(productId);
           navigate(`/products/${productId}`, {
-            state: {
-              userId: userInfo.userId,
-              userName: userInfo.userNamer,
-              address: userInfo.address,
-              phoneNumber: userInfo.phoneNumber,
-            },
+            // state: {
+            //   userId: userInfo.userId,
+            //   userName: userInfo.userName,
+            //   address: userInfo.address,
+            //   phoneNumber: userInfo.phoneNumber,
+            //   productSearchName: productId,
+            // },
           });
         }, 1000);
       }
@@ -176,31 +184,34 @@ const Search = () => {
             소소배송
           </Navbar.Brand>
           <Nav>
-            <Nav.Link>
-              <i class="bi bi-volume-up"></i> 음성듣기
-            </Nav.Link>
+            {/* <Nav.Link>
+              <i className="bi bi-volume-up"></i> 음성듣기
+            </Nav.Link> */}
+            <Navbar.Collapse>
+              <Navbar.Text>
+                <a href="#login">{User.userName}님</a>
+              </Navbar.Text>
+            </Navbar.Collapse>
             <Nav.Link
               as={Link}
               to="/"
-              state={{
-                userId: userInfo.userId,
-                userName: userInfo.userName,
-                address: userInfo.address,
-                phoneNumber: userInfo.phoneNumber,
-              }}
+              // state={{
+              //   userId: userInfo.userId,
+              //   userName: userInfo.userName,
+              //   address: userInfo.address,
+              //   phoneNumber: userInfo.phoneNumber,
+              // }}
             >
-              <i class="bi bi-house"></i> 홈으로
+              <i className="bi bi-house"></i> 홈으로
             </Nav.Link>
           </Nav>
         </Container>
       </Navbar>
       <br />
-      <p class="text-center">
-        <h1 class="display-2">
-          <i class="bi bi-search"></i>
-        </h1>
-        <h3>상품검색</h3>
-      </p>
+      <h1 className="display-2 text-center">
+        <i className="bi bi-search"></i>
+      </h1>
+      <h3 className="text-center">상품검색</h3>
       <Container>
         <Row>
           <Col></Col>
@@ -209,7 +220,7 @@ const Search = () => {
             <input
               type="text"
               className="form-control mt-1"
-              placeholder="아래 마이크를 눌러주세요 :)"
+              // placeholder="아래 마이크를 눌러주세요 :)"
               value={value}
               readOnly
             />
@@ -221,7 +232,7 @@ const Search = () => {
       </Container>
       <br />
       <br />
-      <div class="text-center">
+      <div className="text-center">
         <img
           src="image/voice-search.png"
           width="300"

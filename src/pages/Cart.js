@@ -28,23 +28,43 @@ function Cart() {
   const seconds = date.getSeconds().toString();
   const milliseconds = date.getMilliseconds().toString();
 
+  const [User, setUser] = useState(Object);
+
+  useEffect(() => {
+    setUser(JSON.parse(sessionStorage.getItem("info")));
+  }, []);
+
   useEffect(() => {
     if (userInfo != null) {
-      const userId = userInfo.userId;
-      const userName = userInfo.userName;
-      const address = userInfo.address;
-      const phoneNumber = userInfo.phoneNumber;
+      // const userId = userInfo.userId;
+      // const userName = userInfo.userName;
+      // const address = userInfo.address;
+      // const phoneNumber = userInfo.phoneNumber;
     }
   });
   const getCartListData = async () => {
     try {
-      console.log(userInfo.userId);
-      const result = await axios
+      // console.log(userInfo.userId);
+      // console.log("NAME: " + userInfo.userName);
+      // const result = await axios
+      //   .post("/cart/selectCartList", {
+      //     userId: userInfo.userId,
+      //   })
+      //   .then((res) => {
+      //     // console.log(res);
+      //     setItems(res.data);
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
+      // console.log(User.userId);
+      // console.log(User);
+      await axios
         .post("/cart/selectCartList", {
-          userId: userInfo.userId,
+          userId: JSON.parse(sessionStorage.getItem("info")).userId,
         })
         .then((res) => {
-          // console.log(res);
+          console.log(res);
           setItems(res.data);
         })
         .catch((err) => {
@@ -79,10 +99,10 @@ function Cart() {
   };
 
   function deleteFromCart(productid) {
-    console.log(productid);
+    // console.log(productid);
     axios
       .post("/cart/deleteCartInfo", {
-        userId: userInfo.userId,
+        userId: User.userId,
         productId: productid,
       })
       .then((res) => {
@@ -180,12 +200,13 @@ function Cart() {
     year + month + day + hours + minutes + seconds + milliseconds;
 
   function toPayments() {
+    // console.log("NAME: " + userInfo.userName);
     navigate("/payments", {
       state: {
-        userId: userInfo.userId,
-        userName: userInfo.userName,
-        address: userInfo.address,
-        phoneNumber: userInfo.phoneNumber,
+        // userId: userInfo.userId,
+        // userName: userInfo.userName,
+        // address: userInfo.address,
+        // phoneNumber: userInfo.phoneNumber,
         orderId: newOrderId,
         orderPrice: totalPrice,
       },
@@ -205,7 +226,7 @@ function Cart() {
 
   function insertIntoOrder(e, productid) {
     // console.log(e);
-    if (item.length == 0) {
+    if (item.length === 0) {
       window.alert("죄송합니다. 주문가능한 상품이 없습니다.");
       return;
     }
@@ -222,9 +243,9 @@ function Cart() {
           CHK_YN: "true",
           orderId: newOrderId,
           totalPrice: totalPrice,
-          addr: userInfo.address,
+          addr: User.address,
           cnt: String(itm.PRODUCT_CNT),
-          userId: userInfo.userId,
+          userId: User.userId,
         };
       });
     // const changeData = item.map((itm) => {
@@ -372,41 +393,46 @@ function Cart() {
             소소배송
           </Navbar.Brand>
           <Nav>
-            <Nav.Link>
+            {/* <Nav.Link>
               <i class="bi bi-volume-up"></i> 음성듣기
-            </Nav.Link>
+            </Nav.Link> */}
+            <Navbar.Collapse>
+              <Navbar.Text>
+                <a href="#login">{User.userName}님</a>
+              </Navbar.Text>
+            </Navbar.Collapse>
             <Nav.Link
               as={Link}
               to="/"
-              state={{
-                userId: userInfo.userId,
-                userName: userInfo.userName,
-                address: userInfo.address,
-                phoneNumber: userInfo.phoneNumber,
-              }}
+              // state={{
+              //   userId: userInfo.userId,
+              //   userName: userInfo.userName,
+              //   address: userInfo.address,
+              //   phoneNumber: userInfo.phoneNumber,
+              // }}
             >
-              <i class="bi bi-house"></i> 홈으로
+              <i className="bi bi-house"></i> 홈으로
             </Nav.Link>
             <Nav.Link
               as={Link}
               to="/search"
-              state={{
-                userId: userInfo.userId,
-                userName: userInfo.userName,
-                address: userInfo.address,
-                phoneNumber: userInfo.phoneNumber,
-              }}
+              // state={{
+              //   userId: userInfo.userId,
+              //   userName: userInfo.userName,
+              //   address: userInfo.address,
+              //   phoneNumber: userInfo.phoneNumber,
+              // }}
             >
-              <i class="bi bi-search"></i> 상품검색
+              <i className="bi bi-search"></i> 상품검색
             </Nav.Link>
           </Nav>
         </Container>
       </Navbar>
       <br />
-      <h1 class="display-2 text-center">
-        <i class="bi bi-cart2"></i>
+      <h1 className="display-2 text-center">
+        <i className="bi bi-cart2"></i>
       </h1>
-      <h3 class="text-center">장바구니</h3>
+      <h3 className="text-center">장바구니</h3>
       <br />
       {/* <div className="product-container">
         <div className="row">
@@ -416,19 +442,23 @@ function Cart() {
         </div>
       </div> */}
 
-      <div class="container-fluid">
-        <Table bordered hover size="sm">
-          <thead class="text-center">
-            <th>#</th>
-            <th>선택</th>
-            <th>상품명</th>
-            <th>가격</th>
-            <th>수량</th>
-            <th></th>
+      <div className="container-fluid">
+        <Table bordered hover size="sm" className="count-1">
+          <thead className="text-center">
+            <tr>
+              <th>no</th>
+              <th>#</th>
+              <th>선택</th>
+              <th>상품명</th>
+              <th>가격</th>
+              <th>수량</th>
+              <th></th>
+            </tr>
           </thead>
-          <tbody class="text-center">
+          <tbody className="text-center">
             {item.map((itm) => (
-              <tr key="{itm}">
+              <tr key={itm.PRODUCT_ID}>
+                <td></td>
                 <td width="120px">
                   <style type="text/css">
                     {`
@@ -473,7 +503,7 @@ function Cart() {
                 <td>
                   <br />
                   <input
-                    class="form-check-input"
+                    className="form-check-input"
                     type="checkbox"
                     onChange={(e) => {
                       checkHandler(e.currentTarget.checked, itm.PRODUCT_ID);
@@ -501,8 +531,8 @@ function Cart() {
             ))}
           </tbody>
         </Table>
-        <h6 class="text-muted">
-          <i class="bi bi-info-circle"></i> 수량조절은 원하는 번호를 누르고
+        <h6 className="text-muted">
+          <i className="bi bi-info-circle"></i> 수량조절은 원하는 번호를 누르고
           감소시키고 싶으면 왼쪽 방향키를, 증가시키고 싶으면 오른쪽 방향키를
           눌러주세요.
         </h6>
@@ -542,13 +572,13 @@ function Cart() {
           ))}
         </tbody>
       </table> */}
-      <div class="text-center">
+      <div className="text-center">
         {/* <i class="bi bi-cash"></i>  */}
         {totalPrice}원
       </div>
-      <div class="text-center">
+      <div className="text-center">
         <Button variant="flat2" onClick={insertIntoOrder}>
-          <i class="bi bi-truck"></i> 주문하기
+          <i className="bi bi-truck"></i> 주문하기
         </Button>
         {/* <button>주문하기</button> */}
       </div>

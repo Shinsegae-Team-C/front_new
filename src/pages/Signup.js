@@ -12,7 +12,7 @@ function Signup() {
   const [address, setAddress] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
 
-  const [userList, setUserList] = useState([]);
+  // const [userList, setUserList] = useState([]);
 
   let navigate = useNavigate();
 
@@ -27,29 +27,48 @@ function Signup() {
       console.log("success");
       console.log(res);
       var status = res.data;
-      if (status == "001") {
+      if (status === "001") {
         window.alert("회원가입에 성공했습니다.");
-      } else if (status == "002") {
+      } else if (status === "002") {
         window.alert("이미 존재하는 아이디입니다.");
-      } else if (status == "009") {
+      } else if (status === "009") {
         window.alert("올바르지 않은 전화번호 형식입니다.");
-      } else if (status == "010") {
+      } else if (status === "010") {
         window.alert("전화번호는 숫자만 입력가능합니다.");
-      } else if (status == "011") {
+      } else if (status === "011") {
         window.alert("중복된 전화번호입니다.");
       }
     });
   };
 
+  const movePg = (e) => {
+    if (e.keyCode === 13) {
+      setTimeout(function () {
+        navigate("/login");
+      }, 1000);
+      // navigate("/", {
+      //   state: {
+      //     userId: userData.userId,
+      //     userName: userData.userName,
+      //     address: userData.address,
+      //     phoneNumber: userData.phoneNumber,
+      //   },
+      // });
+    }
+    addUser();
+    // else if (e.keyCode == 13) {
+
+    // }
+  };
   function toLogin() {
     navigate("/login");
   }
 
-  const getUser = () => {
-    Axios.post("/user").then((response) => {
-      setUserList(response.data);
-    });
-  };
+  // const getUser = () => {
+  //   Axios.post("/user").then((response) => {
+  //     setUserList(response.data);
+  //   });
+  // };
 
   return (
     <div>
@@ -70,18 +89,26 @@ function Signup() {
             소소배송
           </Navbar.Brand>
           <Nav>
-            <Nav.Link>
+            {/* <Nav.Link>
               <i class="bi bi-volume-up"></i> 음성듣기
-            </Nav.Link>
+            </Nav.Link> */}
             <Nav.Link href="/">
-              <i class="bi bi-house"></i> 홈으로
+              <i className="bi bi-house"></i> 홈으로
             </Nav.Link>
             <Nav.Link href="/login">로그인</Nav.Link>
           </Nav>
         </Container>
       </Navbar>
+      <div>
+        <input
+          type="text"
+          className="form-control mt-1"
+          onKeyDown={(e) => movePg(e)}
+          autoFocus
+        ></input>
+      </div>
       <Container>
-        <h1 className="Auth-form-title" class="text-center">
+        <h1 className="Auth-form-title text-center">
           <br />
           회원가입
           <br />
@@ -192,7 +219,7 @@ function Signup() {
                 toLogin();
               }}
             >
-              <i class="bi bi-person-plus-fill"></i> 회원가입하기
+              <i className="bi bi-person-plus-fill"></i> 회원가입하기
             </Button>
           </Col>
           <Col></Col>

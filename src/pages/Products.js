@@ -1,7 +1,6 @@
 import "../App.css";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Navbar, Nav, Button, Row, Col } from "react-bootstrap";
 import axios from "axios";
@@ -15,12 +14,18 @@ const Products = () => {
 
   const userInfo = location.state;
 
+  const [User, setUser] = useState(Object);
+
+  useEffect(() => {
+    setUser(JSON.parse(sessionStorage.getItem("info")));
+  }, []);
+
   useEffect(() => {
     if (userInfo != null) {
-      const userId = userInfo.userId;
-      const userName = userInfo.userName;
-      const address = userInfo.address;
-      const phoneNumber = userInfo.phoneNumber;
+      // const userId = userInfo.userId;
+      // const userName = userInfo.userName;
+      // const address = userInfo.address;
+      // const phoneNumber = userInfo.phoneNumber;
     }
   });
 
@@ -30,7 +35,7 @@ const Products = () => {
     window.alert("상품이 담겼습니다.");
     axios
       .post("/productlist/saveProduct", {
-        userId: userInfo.userId,
+        userId: User.userId,
         productId: productid,
       })
       .then((res) => {
@@ -50,11 +55,11 @@ const Products = () => {
 
   function toProductDetail(e, productId) {
     // console.log(productId);
-    console.log(userInfo.productSearchName);
+    // console.log(userInfo.productSearchName);
     navigate(`/product/${productId}`, {
       state: {
         productId: productId,
-        productSearchName: userInfo.productSearchName,
+        // productSearchName: userInfo.productSearchName,
       },
     });
   }
@@ -70,14 +75,28 @@ const Products = () => {
     // const ClientID = "GVxnV9NWdUB0hK0p7LRt";
     // const ClientSecret = "UCFXtO1UJN";
     try {
-      const result = await axios
+      // const result = await axios
+      //   .post("/main", {
+      //     productName: queryId,
+      //   })
+      //   .then((res) => {
+      //     console.log(res);
+      //     setData(res.data);
+      //     if (res.data.length == 0) {
+      //       window.alert("검색어와 일치하는 상품이 없습니다.");
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
+      await axios
         .post("/main", {
           productName: queryId,
         })
         .then((res) => {
           console.log(res);
           setData(res.data);
-          if (res.data.length == 0) {
+          if (res.data.length === 0) {
             window.alert("검색어와 일치하는 상품이 없습니다.");
           }
         })
@@ -103,12 +122,12 @@ const Products = () => {
 
   const toCart = () => {
     navigate("/cart", {
-      state: {
-        userId: userInfo.userId,
-        userName: userInfo.userName,
-        address: userInfo.address,
-        phoneNumber: userInfo.phoneNumber,
-      },
+      // state: {
+      //   userId: userInfo.userId,
+      //   userName: userInfo.userName,
+      //   address: userInfo.address,
+      //   phoneNumber: userInfo.phoneNumber,
+      // },
     });
   };
 
@@ -127,6 +146,7 @@ const Products = () => {
   const speechHandlers = () => {
     // list.map((item) => setSay([...say, item.productName]));
     msg.text = say;
+    msg.voice = synth.getVoices()[0];
     synth.speak(msg);
     // console.log(msg);
   };
@@ -150,6 +170,43 @@ const Products = () => {
     stop();
     console.log(value);
   }, [value]);
+
+  const [selectpid, setSelectpid] = useState("");
+  const [proId, setProId] = useState();
+  const movePg = (e) => {
+    var pnm = ["0"];
+    // var proId = '';
+    if (e.keyCode > 48 && e.keyCode < 58) {
+      const pid = new SpeechSynthesisUtterance();
+      setSelectpid(e.keyCode - 48);
+      setProId(data[e.keyCode - 49]);
+
+      data.map((item, idx) => {
+        pnm[idx + 1] = item.productName;
+      });
+      // console.log(proId);
+      pid.text = e.keyCode - 48 + "번째 상품" + pnm[e.keyCode - 48];
+      // console.log(e.keyCode-48+pnm[e.keyCode-48]);
+      window.speechSynthesis.speak(pid);
+      // console.log(selectpid);
+    } else if (selectpid && e.keyCode === 13) {
+      // console.log(selectpid+'번 상품으로 이동!');
+      console.log(proId);
+      console.log(userInfo);
+      setTimeout(function () {
+        console.log(userInfo.productSearchName);
+        navigate(`/product/${proId.productId}`, {
+          // state: {
+          //   userId: userInfo.userId,
+          //   userName: userInfo.userName,
+          //   address: userInfo.address,
+          //   phoneNumber: userInfo.phoneNumber,
+          //   productSearchName: userInfo.productSearchName,
+          // },
+        });
+      }, 1000);
+    }
+  };
 
   const btnStyle = {
     color: "black",
@@ -189,20 +246,18 @@ const Products = () => {
                         </h3>
                       </Button> */}
           <h5>{data.productName}</h5>
-          <p>
-            {/* 상품번호: {data.productId}
+          {/* 상품번호: {data.productId}
             <br /> */}
-            {data.price}원
-            <br />
-            <button
-              style={btnStyle}
-              onClick={(e) => insertIntoCart(e, data.productId)}
-            >
-              <h5 class="text-center">
-                <i class="bi bi-cart-plus"></i>
-              </h5>
-            </button>
-          </p>
+          {data.price}원
+          <br />
+          <button
+            style={btnStyle}
+            onClick={(e) => insertIntoCart(e, data.productId)}
+          >
+            <h5 className="text-center">
+              <i className="bi bi-cart-plus"></i>
+            </h5>
+          </button>
         </div>
       </>
     );
@@ -226,29 +281,34 @@ const Products = () => {
             소소배송
           </Navbar.Brand>
           <Nav>
+            <Navbar.Collapse>
+              <Navbar.Text>
+                <a href="#login">{User.userName}님</a>
+              </Navbar.Text>
+            </Navbar.Collapse>
             <Nav.Link
               as={Link}
               to="/"
-              state={{
-                userId: userInfo.userId,
-                userName: userInfo.userName,
-                address: userInfo.address,
-                phoneNumber: userInfo.phoneNumber,
-              }}
+              // state={{
+              //   userId: userInfo.userId,
+              //   userName: userInfo.userName,
+              //   address: userInfo.address,
+              //   phoneNumber: userInfo.phoneNumber,
+              // }}
             >
-              <i class="bi bi-house"></i> 홈으로
+              <i className="bi bi-house"></i> 홈으로
             </Nav.Link>
             <Nav.Link
               as={Link}
               to="/search"
-              state={{
-                userId: userInfo.userId,
-                userName: userInfo.userName,
-                address: userInfo.address,
-                phoneNumber: userInfo.phoneNumber,
-              }}
+              // state={{
+              //   userId: userInfo.userId,
+              //   userName: userInfo.userName,
+              //   address: userInfo.address,
+              //   phoneNumber: userInfo.phoneNumber,
+              // }}
             >
-              <i class="bi bi-search"></i> 상품검색
+              <i className="bi bi-search"></i> 상품검색
             </Nav.Link>
           </Nav>
         </Container>
@@ -257,13 +317,11 @@ const Products = () => {
       {/* <h1>React Text to Speech App</h1>
       <h2>상품리스트</h2> */}
       <br />
-      <p class="text-center">
-        <h1 class="display-2">
-          <i class="bi bi-shop"></i>
-        </h1>
-        <h3>상품 검색 결과</h3>
-      </p>
-      <Container class="text-center">
+      <h1 className="display-2 text-center">
+        <i className="bi bi-shop"></i>
+      </h1>
+      <h3 className="text-center">상품 검색 결과</h3>
+      <Container className="text-center">
         <Row>
           <Col></Col>
           <Col>
@@ -271,9 +329,13 @@ const Products = () => {
             <input
               type="text"
               className="form-control mt-1"
-              value={ourText}
+              // value={ourText}
+              // onChange={(e) => setOurText(e.target.value)}
+              // placeholder="말하기 버튼을 누르고 말씀해주세요 :)"
+              value={selectpid}
               onChange={(e) => setOurText(e.target.value)}
-              placeholder="말하기 버튼을 누르고 말씀해주세요 :)"
+              onKeyDown={(e) => movePg(e)}
+              autoFocus
             />
           </Col>
           <Col></Col>
@@ -353,7 +415,7 @@ const Products = () => {
         </div> */}
         <Row>
           <Col></Col>
-          <Col class="text-center">
+          <Col className="text-center">
             <style type="text/css">
               {`
           .btn-flat {
@@ -370,11 +432,11 @@ const Products = () => {
             </style>{" "}
             {say && (
               <Button variant="flat" onClick={speechHandlers}>
-                <i class="bi bi-volume-up"></i>음성 듣기
+                <i className="bi bi-volume-up"></i>음성 듣기
               </Button>
             )}
             <Button variant="flat" onClick={toCart}>
-              <i class="bi bi-cart2"></i>장바구니로 가기
+              <i className="bi bi-cart2"></i>장바구니로 가기
             </Button>
             {/* <Button variant="flat" onClick={() => speechHandler(msg)}>
               <i class="bi bi-mic"></i>말하기

@@ -4,15 +4,7 @@ import { useState } from "react";
 import Axios from "axios";
 import "../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {
-  Container,
-  Navbar,
-  Nav,
-  Row,
-  Col,
-  Button,
-  Form,
-} from "react-bootstrap";
+import { Container, Navbar, Nav, Row, Col, Form } from "react-bootstrap";
 
 function Login() {
   const [userId, setId] = useState("");
@@ -21,6 +13,32 @@ function Login() {
   function toJoin() {
     navigate("/signup");
   }
+
+  const movePg = (e) => {
+    if (e.keyCode === 81) {
+      setTimeout(function () {
+        navigate("/signup");
+      }, 1000);
+      // navigate("/", {
+      //   state: {
+      //     userId: userData.userId,
+      //     userName: userData.userName,
+      //     address: userData.address,
+      //     phoneNumber: userData.phoneNumber,
+      //   },
+      // });
+    }
+    // else if (e.keyCode == 13) {
+
+    // }
+  };
+  // function LoginSubmit() {
+  //   return (
+  //     <>
+  //       <input type="submit" value="로그인하기" class="form-control"></input>
+  //     </>
+  //   );
+  // }
   const login = (e) => {
     e.preventDefault();
     Axios.post("/user/login", {
@@ -30,20 +48,30 @@ function Login() {
       .then((res) => {
         var userData = res.data.info;
         var status = res.data.code;
-        if (status == "000") {
+        if (status === "000") {
+          sessionStorage.setItem(
+            "info",
+            JSON.stringify({
+              userId: userData.userId,
+              userName: userData.userName,
+              address: userData.address,
+              phoneNumber: userData.phoneNumber,
+              login: true,
+            })
+          );
           window.alert("로그인에 성공했습니다.");
-        } else if (status == "012") {
+        } else if (status === "012") {
           window.alert(
             "아이디 또는 비밀번호가 일치하지 않습니다. 다시 확인하신 후 입력해주세요."
           );
         }
         navigate("/", {
-          state: {
-            userId: userData.userId,
-            userName: userData.userName,
-            address: userData.address,
-            phoneNumber: userData.phoneNumber,
-          },
+          // state: {
+          //   userId: userData.userId,
+          //   userName: userData.userName,
+          //   address: userData.address,
+          //   phoneNumber: userData.phoneNumber,
+          // },
         });
       })
       .catch((err) => {
@@ -69,11 +97,11 @@ function Login() {
             소소배송
           </Navbar.Brand>
           <Nav>
-            <Nav.Link>
+            {/* <Nav.Link>
               <i class="bi bi-volume-up"></i> 음성듣기
-            </Nav.Link>
+            </Nav.Link> */}
             <Nav.Link href="/">
-              <i class="bi bi-house"></i> 홈으로
+              <i className="bi bi-house"></i> 홈으로
             </Nav.Link>
           </Nav>
         </Container>
@@ -93,8 +121,16 @@ function Login() {
       <div class="text-center">
       <button onClick={toJoin}>회원가입하기</button>
       </div> */}
+      <div>
+        <input
+          type="text"
+          className="form-control mt-1"
+          onKeyDown={(e) => movePg(e)}
+          autoFocus
+        ></input>
+      </div>
       <Container>
-        <h1 className="Auth-form-title" class="text-center">
+        <h1 className="Auth-form-title text-center">
           <br />
           로그인
           <br />
@@ -209,7 +245,7 @@ function Login() {
             <input
               type="submit"
               value="로그인하기"
-              class="form-control"
+              className="form-control"
             ></input>
           </Col>
           <Col></Col>
@@ -255,14 +291,6 @@ function Login() {
       {/* <button onClick={toJoin}>회원가입하기</button> */}
     </div>
   );
-}
-{
-  /* <i class="bi bi-box-arrow-in-right"></i> 로그인하기 */
-}
-{
-  /* <Button variant="flat" onClick={login}>
-              <i class="bi bi-box-arrow-in-right"></i> 로그인하기
-            </Button> */
 }
 
 export default Login;
